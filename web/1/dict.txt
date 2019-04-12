@@ -71,3 +71,5 @@ crossdomain.xml
 robots.txt
 1.txt
 flag.txt
+practice.txt
+practice.php

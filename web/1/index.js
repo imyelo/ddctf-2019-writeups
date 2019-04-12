@@ -71,6 +71,7 @@ async function debug () {
   const filenames = fs.readFileSync(path.resolve(__dirname, './dict.txt'), 'utf8')
     .replace(/\r\n/g, '\n')
     .split('\n')
+    .filter(Boolean)
 
   try {
     const results = flatten(await Promise.all(filenames.map((name) => 
