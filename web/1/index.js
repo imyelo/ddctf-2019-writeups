@@ -39,6 +39,7 @@ async function fetch (filename) {
   const title = $('title').text()
   const content = base64.decode($('img').attr('src').slice('data:image/gif;base64,'.length) || '')
   return {
+    body,
     title,
     request,
     name,
