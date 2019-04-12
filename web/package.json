@@ -1,0 +1,16 @@
+{
+  "name": "ctf-2019-web",
+  "version": "-.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "yelo <zhihuzeye@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=8"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "got": "^9.6.0"
+  }
+}
