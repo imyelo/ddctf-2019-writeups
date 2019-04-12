@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
-    "got": "^9.6.0"
+    "got": "^9.6.0",
+    "just-flatten-it": "^2.1.0"
   }
 }
