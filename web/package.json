@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
+    "diff-sequences": "^24.3.0",
     "form-data": "^2.3.3",
     "gauge": "^2.7.4",
     "got": "^9.6.0",
     "just-flatten-it": "^2.1.0",
+    "just-split": "^2.1.0",
     "p-all": "^2.1.0",
     "tough-cookie": "^3.0.1"
   }

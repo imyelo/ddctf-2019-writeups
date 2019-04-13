@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "concat": "cat ./assets/avatar.jpg ./assets/tunnel.php > ./tunnel.jpg"
+  },
+  "dependencies": {
+    "del": "^4.1.0",
+    "globby": "^9.2.0",
+    "mkdirp": "^0.5.1"
+  }
+}
