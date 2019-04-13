@@ -61,7 +61,7 @@ async function fetch (filename) {
 
 async function main () {
   try {
-    const result = await fetch('1.zip.bak')
+    const result = await fetch('index.php')
     console.log(JSON.stringify(result, null, 2))
     console.log(result.content)
   } catch (error) {
@@ -69,17 +69,17 @@ async function main () {
   }
 }
 
-async function debug () {
+async function scan () {
   const getFilenameFunctions = [
     (n) => `.${n}.swp`,
     (n) => `.${n}.swo`,
-    (n) => `.${n}.swn`,
-    (n) => `.${n}.swm`,
-    (n) => `.${n}.swl`,
-    (n) => `.${n}.swk`,
-    (n) => `.${n}.swj`,
-    (n) => `.${n}.swi`,
-    (n) => `.${n}.swh`,
+    // (n) => `.${n}.swn`,
+    // (n) => `.${n}.swm`,
+    // (n) => `.${n}.swl`,
+    // (n) => `.${n}.swk`,
+    // (n) => `.${n}.swj`,
+    // (n) => `.${n}.swi`,
+    // (n) => `.${n}.swh`,
     (n) => `${n}.bak`,
     (n) => n,
   ]
@@ -114,4 +114,5 @@ async function debug () {
     }
 }
 
-debug()
+scan()
+// main()
