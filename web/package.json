@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
+    "gauge": "^2.7.4",
     "got": "^9.6.0",
-    "just-flatten-it": "^2.1.0"
+    "just-flatten-it": "^2.1.0",
+    "p-all": "^2.1.0"
   }
 }
