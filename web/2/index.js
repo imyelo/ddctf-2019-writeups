@@ -1,19 +1,8 @@
 const got = require('got')
-const { Cookie, CookieJar } = require('tough-cookie')
+const { CookieJar } = require('tough-cookie')
 const FormData = require('form-data')
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'
-
-const base64 = {
-  encode (str, encoding = 'utf8') {
-    let buf = new Buffer(str, encoding)
-    return buf.toString('base64')
-  },
-  decode (str, encoding = 'utf8') {
-    let buf = new Buffer(str, 'base64')
-    return buf.toString(encoding)
-  }
-}
 
 function serialize (body) {
   return body.replace(/}{/g, '}\n{').split('\n').map((str) => JSON.parse(str))

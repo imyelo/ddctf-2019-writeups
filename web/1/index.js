@@ -5,44 +5,17 @@ const cheerio = require('cheerio')
 const flatten = require('just-flatten-it')
 const pAll = require('p-all')
 const Gauge = require('gauge')
+const { base64, ascii } = require('../common/utils')
 
 const FETCH_CONCURRENCY = 5
 
-const base64 = {
-  encode (str, encoding = 'utf8') {
-    let buf = new Buffer(str, encoding)
-    return buf.toString('base64')
-  },
-  decode (str, encoding = 'utf8') {
-    let buf = new Buffer(str, 'base64')
-    return buf.toString(encoding)
-  }
-}
-
-const acsii = {
-  decode (str) {
-    let output = ''
-    for (let index = 0; index < str.length; index += 2) {
-      output = output + String.fromCharCode(parseInt(str.slice(index, index + 2), 16))
-    }
-    return output
-  },
-  encode (str) {
-    let output = ''
-    for (let index = 0; index < str.length; index++) {
-      output = output + str.charCodeAt(index).toString(16)
-    }
-    return output
-  },
-}
-
 function decrypt (input) {
   input = base64.decode(base64.decode(input))
-  return acsii.decode(input)
+  return ascii.decode(input)
 }
 
 function encrypt (input) {
-  return base64.encode(base64.encode(acsii.encode(input)))
+  return base64.encode(base64.encode(ascii.encode(input)))
 }
 
 async function fetch (filename) {
@@ -93,7 +66,7 @@ async function main () {
     console.log('Step5: ---')
     console.log(await step4())
     console.log('Bonus: ---')
-    console.log(acsii.decode('436f6e67726174756c6174696f6e73')) // Congratulations
+    console.log(ascii.decode('436f6e67726174756c6174696f6e73')) // Congratulations
   } catch (error) {
     console.error(`Error: ${error.message}`)
   }
