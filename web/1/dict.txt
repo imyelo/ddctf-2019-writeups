@@ -7,3 +7,5 @@ flag.txt
 flag
 home.php
 admin.php
+robots.txt
+practice.txt
