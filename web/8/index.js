@@ -8,7 +8,7 @@ const Gauge = require('gauge')
 const TOKEN = 'UGFkT3JhY2xlOml2L2NiY8O+7uQmXKFqNVUuI9c7VBe42FqRvernmQhsxyPnvxaF'
 const ALL_HEX = Array.from(Array(256)).map((v, i) => pad(i.toString(16), 2, 0))
 const BLOCK_SIZE = 16
-const THROTTLE = 50
+const THROTTLE = 20
 
 const MESSAGE_DECRYPT_ERROR = 'decrypt err~'
 const MESSAGE_PARSE_ERROR = 'parse json err~'
@@ -52,8 +52,9 @@ async function verify (token) {
 const crackByteAt = async (buf, blockIndex, byteIndex) => {
   const position =  BLOCK_SIZE * blockIndex + byteIndex
   const original = buf[position]
+  console.log('Crackinng byte at %s of Block %s', byteIndex, blockIndex)
   console.log('Original Hex:', original.toString(16))
-  
+
   const gauge = new Gauge()
   let passed = []
   await pAll(ALL_HEX.map((hex, i) => async () => {
@@ -79,7 +80,11 @@ const crackByteAt = async (buf, blockIndex, byteIndex) => {
     throw new Error('Cannot find any replacement hex')
   }
 
-  console.log('Passed:', passed)
+  if (passed[0].hex === original.toString(16)) {
+    passed = passed.slice(1).concat(passed[0])
+  }
+
+  console.log('Passed:\n', JSON.stringify(passed, null, 2))
   return passed
 }
 
@@ -96,20 +101,22 @@ const replaceWithPadding = (buf, intermediaries, blockIndex, padding, blockSize 
 
 const crackBlock = async (buf, blockIndex) => {
   let data = {}
-  for (let padding = 1; padding <= BLOCK_SIZE; padding++) {
-    let byteIndex = BLOCK_SIZE - padding
-    let intermediaries = _.mapValues(data, ({ intermediary }) => intermediary)
-    console.log('Intermediaries', intermediaries)
-    console.log(buf.toString('hex'), intermediaries, blockIndex, padding)
+  try {
+    for (let padding = 1; padding <= BLOCK_SIZE; padding++) {
+      let byteIndex = BLOCK_SIZE - padding
+      let intermediaries = _.mapValues(data, ({ intermediary }) => intermediary)
+      console.log('Intermediaries', JSON.stringify(intermediaries))
+      let b = replaceWithPadding(buf, intermediaries, blockIndex, padding)
 
-    let b = replaceWithPadding(buf, intermediaries, blockIndex, padding)
-
-    let passed = await crackByteAt(b, blockIndex, byteIndex)
-    data[byteIndex] = passed[0]
-    console.log('Crack Block Data', data[byteIndex])
-    console.log('Crack Block Full Data', JSON.stringify(data, null, 2))
+      let passed = await crackByteAt(b, blockIndex, byteIndex)
+      data[byteIndex] = passed[0]
+      console.log('Push crack block data:', JSON.stringify(data[byteIndex]))
+      console.log('---\n')
+    }
+  } finally {
+    let vector = Object.values(_.mapValues(data, ({ iv }) => Buffer.from(iv.toString(16), 'hex'))).join('')
+    console.log(vector)
   }
-
 }
 
 async function main () {
@@ -123,7 +130,9 @@ async function main () {
   console.log('---\n')
 
   // await crackByteAt(buf, 1, 15)
-  // await crackBlock(buf, 1)
+  // buf = replace(buf, 2 * BLOCK_SIZE, Array.from(Array(32)).map(() => '0').join(''))
+  // console.log(buf)
+  await crackBlock(buf, 1)
 
   // await request(TOKEN)
   // let buf = Buffer.from(TOKEN, 'base64')
