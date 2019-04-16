@@ -2,11 +2,13 @@ const got = require('got')
 const pAll = require('p-all')
 const pad = require('left-pad')
 const delay = require('delay')
+const _ = require('lodash')
+const Gauge = require('gauge')
 
 const TOKEN = 'UGFkT3JhY2xlOml2L2NiY8O+7uQmXKFqNVUuI9c7VBe42FqRvernmQhsxyPnvxaF'
 const ALL_HEX = Array.from(Array(256)).map((v, i) => pad(i.toString(16), 2, 0))
 const BLOCK_SIZE = 16
-const THROTTLE = 100
+const THROTTLE = 50
 
 const MESSAGE_DECRYPT_ERROR = 'decrypt err~'
 const MESSAGE_PARSE_ERROR = 'parse json err~'
@@ -47,67 +49,81 @@ async function verify (token) {
  * https://www.freebuf.com/articles/web/15504.html
  * https://image.3001.net/uploads/image/20131028/20131028140812_51657.png
  */
-async function findPadding (buf, position) {
-  let results = {}
-  await pAll(ALL_HEX.map((hex) => async () => {
+const crackByteAt = async (buf, blockIndex, byteIndex) => {
+  const position =  BLOCK_SIZE * blockIndex + byteIndex
+  const original = buf[position]
+  console.log('Original Hex:', original.toString(16))
+  
+  const gauge = new Gauge()
+  let passed = []
+  await pAll(ALL_HEX.map((hex, i) => async () => {
     let modified = replace(buf, position, hex)
-    // console.log('Modify [%d] to %s', position, hex)
-    // console.log('Modified Result:', modified)
     let message = await verify(modified.toString('base64'))
     message = message.trim()
-    console.log('Replacement Hex: %s\nResult:%s\n---', hex, message)
-    // if (message !== MESSAGE_DECRYPT_ERR) {
-    //   console.log('!-- AVAILABLE CHAR FOUND: 0x%s at %d --!', hex, position)
-    // }
-    results[message] = (results[message] || []).concat(hex)
+    gauge.show(`Verify modified Hex: ${hex}, Message: ${message}`, i / ALL_HEX.length)
+    if (message !== MESSAGE_DECRYPT_ERROR) {
+      let intermediary = parseInt(hex, 16) ^ (BLOCK_SIZE - byteIndex)
+      let iv = intermediary ^ original
+      passed.push({
+        hex,
+        message,
+        intermediary,
+        iv,
+      })
+    }
     await delay(THROTTLE)
   }), { concurrency: 1 })
-  console.log('Result:', results)
-  return results
+  gauge.hide()
+
+  if (!passed.length) {
+    throw new Error('Cannot find any replacement hex')
+  }
+
+  console.log('Passed:', passed)
+  return passed
+}
+
+const replaceWithPadding = (buf, intermediaries, blockIndex, padding, blockSize = BLOCK_SIZE) => {
+  let b = Buffer.from(buf)
+  for (let j = blockSize - 1; j > blockSize - padding; j--) {
+    let hex = (padding ^ intermediaries[j]).toString(16)
+    let position = blockIndex * blockSize + j
+    console.log('Replacing with padding at %s: 0x%s', position, hex)
+    b = replace(b, position, hex)
+  }
+  return b
+}
+
+const crackBlock = async (buf, blockIndex) => {
+  let data = {}
+  for (let padding = 1; padding <= BLOCK_SIZE; padding++) {
+    let byteIndex = BLOCK_SIZE - padding
+    let intermediaries = _.mapValues(data, ({ intermediary }) => intermediary)
+    console.log('Intermediaries', intermediaries)
+    console.log(buf.toString('hex'), intermediaries, blockIndex, padding)
+
+    let b = replaceWithPadding(buf, intermediaries, blockIndex, padding)
+
+    let passed = await crackByteAt(b, blockIndex, byteIndex)
+    data[byteIndex] = passed[0]
+    console.log('Crack Block Data', data[byteIndex])
+    console.log('Crack Block Full Data', JSON.stringify(data, null, 2))
+  }
+
 }
 
 async function main () {
   let buf = Buffer.from(TOKEN, 'base64')
-  console.log('Buffer: %s\n(Hex: %s)\nLength: %d\nBlock: %d\n(Block size: %d)', buf, buf.toString('hex'), buf.length, buf.length / BLOCK_SIZE, BLOCK_SIZE)
+  console.log('---')
+  console.log('Original Token Buffer: %s', buf)
+  console.log('(Hex: %s)\n', buf.toString('hex'))
+  console.log('Length: %d', buf.length)
+  console.log('Block: %d', buf.length / BLOCK_SIZE)
+  console.log('(Block size: %d)', BLOCK_SIZE)
+  console.log('---\n')
 
-  const crackVectorAt = async (buf, block, index) => {
-    const position =  BLOCK_SIZE * block + index
-    console.log('Original Hex:', buf[position].toString(16))
-    const results = await findPadding(buf, position)
-    let matched
-    if (results[MESSAGE_PARSE_ERROR] && results[MESSAGE_PARSE_ERROR].length === 1) {
-      matched = results[MESSAGE_PARSE_ERROR][0]
-    } else if (results[MESSAGE_ORIGINAL] && results[MESSAGE_ORIGINAL].length === 1) {
-      matched = results[MESSAGE_ORIGINAL][0]
-    } else {
-      throw new Error('Cannot find the replacement hex')
-    }
-    let intermediary = parseInt(matched, 16) ^ (BLOCK_SIZE - index)
-    let iv = intermediary ^ buf[index]
-    return {
-      intermediary,
-      iv,
-    }
-  }
-
-  const crackBlock = async (buf, block) => {
-    let data = {}
-    for (let padding = 1; padding <= BLOCK_SIZE; padding++) {
-      let index = BLOCK_SIZE - padding
-      let b = Buffer.from(buf)
-      for (j = BLOCK_SIZE - 1; j > index; j--) {
-        let hex = (padding ^ data[j].intermediary).toString(16)
-        console.log('REPLACING', j, hex)
-        b = replace(b, j, hex)
-      }
-      data[index] = await crackVectorAt(b, block, index)
-      console.log('DATA', data[index])
-      console.log('FULL DATA', JSON.stringify(data, null, 2))
-    }
-  }
-
-  // await crackVectorAt(buf, 1, 15)
-  await crackBlock(buf, 2)
+  // await crackByteAt(buf, 1, 15)
+  // await crackBlock(buf, 1)
 
   // await request(TOKEN)
   // let buf = Buffer.from(TOKEN, 'base64')
@@ -115,6 +131,23 @@ async function main () {
   // console.log(buf.toString('utf8').length)
   // console.log(buf.toString('hex'))
   // console.log(buf.toString('hex').length)
+
+  // let b = Buffer.from('00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff', 'hex')
+  // let r = replaceWithPadding(b, {
+  //   15: 0x11,
+  // }, 0, 2)
+  // console.log(r)
+
+  // let b = Buffer.from('5061644f7261636c653a69762f636263c3beeee4265ca16a35552e23d73b5417b8d85a91bdeae799086cc723e7bf1685', 'hex')
+  // let r = replaceWithPadding(b, { '12': 211, '13': 63, '14': 80, '15': 19 }, 1, 5)
+  // console.log(b.toString('hex'))
+  // console.log(r.toString('hex'))
+  // console.log(b.toString('hex').slice(31, 64))
+  // console.log(r.toString('hex').slice(31, 64))
+
+  // const replacement = 'b8d72d19bd5e082a085e3623e7bf1685'
+  // const str = Buffer.from(replacement, 'hex').toString()
+  // console.log(str)
 }
 
 main()
