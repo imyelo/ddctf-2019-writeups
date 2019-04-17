@@ -3,9 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "start": "micro"
+    "agent": "micro -l tcp://0.0.0.0:8123 ./agent.js",
+    "mysql": "node ./mysql.js"
   },
   "author": "yelo <zhihuzeye@gmail.com>",
   "license": "ISC",
