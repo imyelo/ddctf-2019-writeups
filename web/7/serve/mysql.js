@@ -43,7 +43,7 @@ const server = net.createServer((socket) => {
   state = STATE.WAITING_FOR_FIRST_OK
 
   socket.on('data', (data) => {
-    console.log('Received data:---\n%s\n---', data.toString())
+    console.log('Received data:---\n%s\n---\n%s\n---', data.toString('hex'), data.toString())
     console.log('State:---\n%s\n---', state)
     switch (state) {
       case STATE.WAITING_FOR_FIRST_OK: {
