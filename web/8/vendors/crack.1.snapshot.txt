@@ -1,0 +1,102 @@
+Crack block 1 Result:
+{
+  "0": {
+    "hex": "b7",
+    "message": "parse json err~",
+    "nextIntermediary": 167,
+    "nextPlain": 100
+  },
+  "1": {
+    "hex": "dc",
+    "message": "parse json err~",
+    "nextIntermediary": 211,
+    "nextPlain": 109
+  },
+  "2": {
+    "hex": "89",
+    "message": "parse json err~",
+    "nextIntermediary": 135,
+    "nextPlain": 105
+  },
+  "3": {
+    "hex": "87",
+    "message": "parse json err~",
+    "nextIntermediary": 138,
+    "nextPlain": 110
+  },
+  "4": {
+    "hex": "08",
+    "message": "parse json err~",
+    "nextIntermediary": 4,
+    "nextPlain": 34
+  },
+  "5": {
+    "hex": "6d",
+    "message": "parse json err~",
+    "nextIntermediary": 102,
+    "nextPlain": 58
+  },
+  "6": {
+    "hex": "cd",
+    "message": "parse json err~",
+    "nextIntermediary": 199,
+    "nextPlain": 102
+  },
+  "7": {
+    "hex": "02",
+    "message": "parse json err~",
+    "nextIntermediary": 11,
+    "nextPlain": 97
+  },
+  "8": {
+    "hex": "51",
+    "message": "parse json err~",
+    "nextIntermediary": 89,
+    "nextPlain": 108
+  },
+  "9": {
+    "hex": "21",
+    "message": "parse json err~",
+    "nextIntermediary": 38,
+    "nextPlain": 115
+  },
+  "10": {
+    "hex": "4d",
+    "message": "parse json err~",
+    "nextIntermediary": 75,
+    "nextPlain": 101
+  },
+  "11": {
+    "hex": "5b",
+    "message": "parse json err~",
+    "nextIntermediary": 94,
+    "nextPlain": 125
+  },
+  "12": {
+    "hex": "d7",
+    "message": "{\"id\":100,\"roleAdmin\":false}",
+    "nextIntermediary": 211,
+    "nextPlain": 4
+  },
+  "13": {
+    "hex": "3c",
+    "message": "parse json err~",
+    "nextIntermediary": 63,
+    "nextPlain": 4
+  },
+  "14": {
+    "hex": "52",
+    "message": "parse json err~",
+    "nextIntermediary": 80,
+    "nextPlain": 4
+  },
+  "15": {
+    "hex": "12",
+    "message": "parse json err~",
+    "nextIntermediary": 19,
+    "nextPlain": 4
+  }
+}
+Plain (of next block):
+dmin":false}
+(Hex: 646d696e223a66616c73657d04040404)

@@ -63,13 +63,13 @@ const crackByteAt = async (buf, blockIndex, byteIndex) => {
     message = message.trim()
     gauge.show(`Verify modified Hex: ${hex}, Message: ${message}`, i / ALL_HEX.length)
     if (message !== MESSAGE_DECRYPT_ERROR) {
-      let intermediary = parseInt(hex, 16) ^ (BLOCK_SIZE - byteIndex)
-      let iv = intermediary ^ original
+      let nextIntermediary = parseInt(hex, 16) ^ (BLOCK_SIZE - byteIndex)
+      let nextPlain = nextIntermediary ^ original
       passed.push({
         hex,
         message,
-        intermediary,
-        iv,
+        nextIntermediary,
+        nextPlain,
       })
     }
     await delay(THROTTLE)
@@ -91,7 +91,7 @@ const crackByteAt = async (buf, blockIndex, byteIndex) => {
 const replaceWithPadding = (buf, intermediaries, blockIndex, padding, blockSize = BLOCK_SIZE) => {
   let b = Buffer.from(buf)
   for (let j = blockSize - 1; j > blockSize - padding; j--) {
-    let hex = (padding ^ intermediaries[j]).toString(16)
+    let hex = pad((padding ^ intermediaries[j]).toString(16), 2, '0')
     let position = blockIndex * blockSize + j
     console.log('Replacing with padding at %s: 0x%s', position, hex)
     b = replace(b, position, hex)
@@ -104,8 +104,8 @@ const crackBlock = async (buf, blockIndex) => {
   try {
     for (let padding = 1; padding <= BLOCK_SIZE; padding++) {
       let byteIndex = BLOCK_SIZE - padding
-      let intermediaries = _.mapValues(data, ({ intermediary }) => intermediary)
-      console.log('Intermediaries', JSON.stringify(intermediaries))
+      let intermediaries = _.mapValues(data, ({ nextIntermediary }) => nextIntermediary)
+      console.log('Intermediaries (of next block)', JSON.stringify(intermediaries))
       let b = replaceWithPadding(buf, intermediaries, blockIndex, padding)
 
       let passed = await crackByteAt(b, blockIndex, byteIndex)
@@ -114,8 +114,14 @@ const crackBlock = async (buf, blockIndex) => {
       console.log('---\n')
     }
   } finally {
-    let vector = Object.values(_.mapValues(data, ({ iv }) => Buffer.from(iv.toString(16), 'hex'))).join('')
-    console.log(vector)
+    let plain = Buffer.concat(Object.values(_.mapValues(data, ({ nextPlain }) =>
+      Buffer.from(pad(nextPlain.toString(16), 2, 0), 'hex'))
+    ))
+    console.log('Crack block %d Result:', blockIndex)
+    console.log(JSON.stringify(data, null, 2))
+    console.log('Plain (of next block):')
+    console.log(plain.toString())
+    console.log('(Hex: %s)', Buffer.from(plain).toString('hex'))
   }
 }
 
@@ -132,7 +138,8 @@ async function main () {
   // await crackByteAt(buf, 1, 15)
   // buf = replace(buf, 2 * BLOCK_SIZE, Array.from(Array(32)).map(() => '0').join(''))
   // console.log(buf)
-  await crackBlock(buf, 1)
+
+  // await crackBlock(buf, 1)
 
   // await request(TOKEN)
   // let buf = Buffer.from(TOKEN, 'base64')
@@ -157,6 +164,132 @@ async function main () {
   // const replacement = 'b8d72d19bd5e082a085e3623e7bf1685'
   // const str = Buffer.from(replacement, 'hex').toString()
   // console.log(str)
+
+  const data = {
+    "0": {
+      "hex": "b7",
+      "message": "parse json err~",
+      "nextIntermediary": 167,
+      "nextPlain": 100
+    },
+    "1": {
+      "hex": "dc",
+      "message": "parse json err~",
+      "nextIntermediary": 211,
+      "nextPlain": 109
+    },
+    "2": {
+      "hex": "89",
+      "message": "parse json err~",
+      "nextIntermediary": 135,
+      "nextPlain": 105
+    },
+    "3": {
+      "hex": "87",
+      "message": "parse json err~",
+      "nextIntermediary": 138,
+      "nextPlain": 110
+    },
+    "4": {
+      "hex": "08",
+      "message": "parse json err~",
+      "nextIntermediary": 4,
+      "nextPlain": 34
+    },
+    "5": {
+      "hex": "6d",
+      "message": "parse json err~",
+      "nextIntermediary": 102,
+      "nextPlain": 58
+    },
+    "6": {
+      "hex": "cd",
+      "message": "parse json err~",
+      "nextIntermediary": 199,
+      "nextPlain": 102
+    },
+    "7": {
+      "hex": "02",
+      "message": "parse json err~",
+      "nextIntermediary": 11,
+      "nextPlain": 97
+    },
+    "8": {
+      "hex": "51",
+      "message": "parse json err~",
+      "nextIntermediary": 89,
+      "nextPlain": 108
+    },
+    "9": {
+      "hex": "21",
+      "message": "parse json err~",
+      "nextIntermediary": 38,
+      "nextPlain": 115
+    },
+    "10": {
+      "hex": "4d",
+      "message": "parse json err~",
+      "nextIntermediary": 75,
+      "nextPlain": 101
+    },
+    "11": {
+      "hex": "5b",
+      "message": "parse json err~",
+      "nextIntermediary": 94,
+      "nextPlain": 125
+    },
+    "12": {
+      "hex": "d7",
+      "message": "{\"id\":100,\"roleAdmin\":false}",
+      "nextIntermediary": 211,
+      "nextPlain": 4
+    },
+    "13": {
+      "hex": "3c",
+      "message": "parse json err~",
+      "nextIntermediary": 63,
+      "nextPlain": 4
+    },
+    "14": {
+      "hex": "52",
+      "message": "parse json err~",
+      "nextIntermediary": 80,
+      "nextPlain": 4
+    },
+    "15": {
+      "hex": "12",
+      "message": "parse json err~",
+      "nextIntermediary": 19,
+      "nextPlain": 4
+    }
+  }
+
+  // dmin":false}
+  let plain = Buffer.concat(Object.values(_.mapValues(data, ({ nextPlain }) =>
+    Buffer.from(pad(nextPlain.toString(16), 2, 0), 'hex'))
+  ))
+  let intermediaries = Buffer.concat(Object.values(_.mapValues(data, ({ nextIntermediary }) =>
+    Buffer.from(pad(nextIntermediary.toString(16), 2, 0), 'hex'))
+  ))
+  let replacement = replace(plain, 6, Buffer.from('     true}').toString('hex'))
+  // let replacement = replace(plain, 0, Buffer.from('o').toString('hex'))
+  // console.log(plain.toString('hex'))
+  // console.log(replacement.toString('hex'))
+  console.log(Buffer.from('o').toString('hex'))
+  // let replacement = plain
+  let cipher = ''
+  for (let [i, r] of replacement.entries()) {
+    let c = r ^ intermediaries[i]
+    cipher += pad(c.toString(16), 2, 0)
+  }
+  let payload = replace(buf, 16, cipher)
+  console.log(payload)
+  let result = await verify(payload.toString('base64'))
+  console.log(result)
+
+  crackBlock(payload, 0)
+
+
 }
 
 main()
