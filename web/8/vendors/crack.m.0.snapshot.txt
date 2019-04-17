@@ -1,0 +1,472 @@
+---
+Original Token Buffer: PadOracle:iv/cbcþ��&\�j5U.#�;T��Z����l�#��
+(Hex: 5061644f7261636c653a69762f636263c3beeee4265ca16a35552e23d73b5417b8d85a91bdeae799086cc723e7bf1685)
+
+Length: 48
+Block: 3
+(Block size: 16)
+---
+
+<Buffer 50 61 64 4f 72 61 63 6c 65 3a 69 76 2f 63 62 63 c3 be ee e4 26 5c b3 79 2c 43 36 5b d6 3a 55 16>
+Intermediaries (of next block) {}
+Crackinng byte at 15 of Block 0
+Original Hex: 63
+Passed:
+ [
+  {
+    "hex": "9a",
+    "message": "parse json err~",
+    "nextIntermediary": 155,
+    "nextPlain": 248
+  }
+]
+Push crack block data: {"hex":"9a","message":"parse json err~","nextIntermediary":155,"nextPlain":248}
+---
+
+Intermediaries (of next block) {"15":155}
+Replacing with padding at 15: 0x99
+Crackinng byte at 14 of Block 0
+Original Hex: 62
+Passed:
+ [
+  {
+    "hex": "63",
+    "message": "parse json err~",
+    "nextIntermediary": 97,
+    "nextPlain": 3
+  }
+]
+Push crack block data: {"hex":"63","message":"parse json err~","nextIntermediary":97,"nextPlain":3}
+---
+
+Intermediaries (of next block) {"14":97,"15":155}
+Replacing with padding at 15: 0x98
+Replacing with padding at 14: 0x62
+Crackinng byte at 13 of Block 0
+Original Hex: 63
+Passed:
+ [
+  {
+    "hex": "87",
+    "message": "parse json err~",
+    "nextIntermediary": 132,
+    "nextPlain": 231
+  }
+]
+Push crack block data: {"hex":"87","message":"parse json err~","nextIntermediary":132,"nextPlain":231}
+---
+
+Intermediaries (of next block) {"13":132,"14":97,"15":155}
+Replacing with padding at 15: 0x9f
+Replacing with padding at 14: 0x65
+Replacing with padding at 13: 0x80
+Crackinng byte at 12 of Block 0
+Original Hex: 2f
+Passed:
+ [
+  {
+    "hex": "f8",
+    "message": "parse json err~",
+    "nextIntermediary": 252,
+    "nextPlain": 211
+  }
+]
+Push crack block data: {"hex":"f8","message":"parse json err~","nextIntermediary":252,"nextPlain":211}
+---
+
+Intermediaries (of next block) {"12":252,"13":132,"14":97,"15":155}
+Replacing with padding at 15: 0x9e
+Replacing with padding at 14: 0x64
+Replacing with padding at 13: 0x81
+Replacing with padding at 12: 0xf9
+Crackinng byte at 11 of Block 0
+Original Hex: 76
+Passed:
+ [
+  {
+    "hex": "63",
+    "message": "parse json err~",
+    "nextIntermediary": 102,
+    "nextPlain": 16
+  }
+]
+Push crack block data: {"hex":"63","message":"parse json err~","nextIntermediary":102,"nextPlain":16}
+---
+
+Intermediaries (of next block) {"11":102,"12":252,"13":132,"14":97,"15":155}
+Replacing with padding at 15: 0x9d
+Replacing with padding at 14: 0x67
+Replacing with padding at 13: 0x82
+Replacing with padding at 12: 0xfa
+Replacing with padding at 11: 0x60
+Crackinng byte at 10 of Block 0
+Original Hex: 69
+Passed:
+ [
+  {
+    "hex": "1a",
+    "message": "parse json err~",
+    "nextIntermediary": 28,
+    "nextPlain": 117
+  }
+]
+Push crack block data: {"hex":"1a","message":"parse json err~","nextIntermediary":28,"nextPlain":117}
+---
+
+Intermediaries (of next block) {"10":28,"11":102,"12":252,"13":132,"14":97,"15":155}
+Replacing with padding at 15: 0x9c
+Replacing with padding at 14: 0x66
+Replacing with padding at 13: 0x83
+Replacing with padding at 12: 0xfb
+Replacing with padding at 11: 0x61
+Replacing with padding at 10: 0x1b
+Crackinng byte at 9 of Block 0
+Original Hex: 3a
+Passed:
+ [
+  {
+    "hex": "13",
+    "message": "parse json err~",
+    "nextIntermediary": 20,
+    "nextPlain": 46
+  }
+]
+Push crack block data: {"hex":"13","message":"parse json err~","nextIntermediary":20,"nextPlain":46}
+---
+
+Intermediaries (of next block) {"9":20,"10":28,"11":102,"12":252,"13":132,"14":97,"15":155}
+Replacing with padding at 15: 0x93
+Replacing with padding at 14: 0x69
+Replacing with padding at 13: 0x8c
+Replacing with padding at 12: 0xf4
+Replacing with padding at 11: 0x6e
+Replacing with padding at 10: 0x14
+Replacing with padding at 9: 0x1c
+Crackinng byte at 8 of Block 0
+Original Hex: 65
+Passed:
+ [
+  {
+    "hex": "1b",
+    "message": "parse json err~",
+    "nextIntermediary": 19,
+    "nextPlain": 118
+  }
+]
+Push crack block data: {"hex":"1b","message":"parse json err~","nextIntermediary":19,"nextPlain":118}
+---
+
+Intermediaries (of next block) {"8":19,"9":20,"10":28,"11":102,"12":252,"13":132,"14":97,"15":155}
+Replacing with padding at 15: 0x92
+Replacing with padding at 14: 0x68
+Replacing with padding at 13: 0x8d
+Replacing with padding at 12: 0xf5
+Replacing with padding at 11: 0x6f
+Replacing with padding at 10: 0x15
+Replacing with padding at 9: 0x1d
+Replacing with padding at 8: 0x1a
+Crackinng byte at 7 of Block 0
+Original Hex: 6c
+Passed:
+ [
+  {
+    "hex": "07",
+    "message": "parse json err~",
+    "nextIntermediary": 14,
+    "nextPlain": 98
+  }
+]
+Push crack block data: {"hex":"07","message":"parse json err~","nextIntermediary":14,"nextPlain":98}
+---
+
+Intermediaries (of next block) {"7":14,"8":19,"9":20,"10":28,"11":102,"12":252,"13":132,"14":97,"15":155}
+Replacing with padding at 15: 0x91
+Replacing with padding at 14: 0x6b
+Replacing with padding at 13: 0x8e
+Replacing with padding at 12: 0xf6
+Replacing with padding at 11: 0x6c
+Replacing with padding at 10: 0x16
+Replacing with padding at 9: 0x1e
+Replacing with padding at 8: 0x19
+Replacing with padding at 7: 0x04
+Crackinng byte at 6 of Block 0
+Original Hex: 63
+Passed:
+ [
+  {
+    "hex": "cb",
+    "message": "parse json err~",
+    "nextIntermediary": 193,
+    "nextPlain": 162
+  }
+]
+Push crack block data: {"hex":"cb","message":"parse json err~","nextIntermediary":193,"nextPlain":162}
+---
+
+Intermediaries (of next block) {"6":193,"7":14,"8":19,"9":20,"10":28,"11":102,"12":252,"13":132,"14":97,"15":155}
+Replacing with padding at 15: 0x90
+Replacing with padding at 14: 0x6a
+Replacing with padding at 13: 0x8f
+Replacing with padding at 12: 0xf7
+Replacing with padding at 11: 0x6d
+Replacing with padding at 10: 0x17
+Replacing with padding at 9: 0x1f
+Replacing with padding at 8: 0x18
+Replacing with padding at 7: 0x05
+Replacing with padding at 6: 0xca
+Crackinng byte at 5 of Block 0
+Original Hex: 61
+Passed:
+ [
+  {
+    "hex": "13",
+    "message": "parse json err~",
+    "nextIntermediary": 24,
+    "nextPlain": 121
+  }
+]
+Push crack block data: {"hex":"13","message":"parse json err~","nextIntermediary":24,"nextPlain":121}
+---
+
+Intermediaries (of next block) {"5":24,"6":193,"7":14,"8":19,"9":20,"10":28,"11":102,"12":252,"13":132,"14":97,"15":155}
+Replacing with padding at 15: 0x97
+Replacing with padding at 14: 0x6d
+Replacing with padding at 13: 0x88
+Replacing with padding at 12: 0xf0
+Replacing with padding at 11: 0x6a
+Replacing with padding at 10: 0x10
+Replacing with padding at 9: 0x18
+Replacing with padding at 8: 0x1f
+Replacing with padding at 7: 0x02
+Replacing with padding at 6: 0xcd
+Replacing with padding at 5: 0x14
+Crackinng byte at 4 of Block 0
+Original Hex: 72
+Passed:
+ [
+  {
+    "hex": "7d",
+    "message": "parse json err~",
+    "nextIntermediary": 113,
+    "nextPlain": 3
+  }
+]
+Push crack block data: {"hex":"7d","message":"parse json err~","nextIntermediary":113,"nextPlain":3}
+---
+
+Intermediaries (of next block) {"4":113,"5":24,"6":193,"7":14,"8":19,"9":20,"10":28,"11":102,"12":252,"13":132,"14":97,"15":155}
+Replacing with padding at 15: 0x96
+Replacing with padding at 14: 0x6c
+Replacing with padding at 13: 0x89
+Replacing with padding at 12: 0xf1
+Replacing with padding at 11: 0x6b
+Replacing with padding at 10: 0x11
+Replacing with padding at 9: 0x19
+Replacing with padding at 8: 0x1e
+Replacing with padding at 7: 0x03
+Replacing with padding at 6: 0xcc
+Replacing with padding at 5: 0x15
+Replacing with padding at 4: 0x7c
+Crackinng byte at 3 of Block 0
+Original Hex: 4f
+Passed:
+ [
+  {
+    "hex": "df",
+    "message": "parse json err~",
+    "nextIntermediary": 210,
+    "nextPlain": 157
+  }
+]
+Push crack block data: {"hex":"df","message":"parse json err~","nextIntermediary":210,"nextPlain":157}
+---
+
+Intermediaries (of next block) {"3":210,"4":113,"5":24,"6":193,"7":14,"8":19,"9":20,"10":28,"11":102,"12":252,"13":132,"14":97,"15":155}
+Replacing with padding at 15: 0x95
+Replacing with padding at 14: 0x6f
+Replacing with padding at 13: 0x8a
+Replacing with padding at 12: 0xf2
+Replacing with padding at 11: 0x68
+Replacing with padding at 10: 0x12
+Replacing with padding at 9: 0x1a
+Replacing with padding at 8: 0x1d
+Replacing with padding at 7: 0x00
+Replacing with padding at 6: 0xcf
+Replacing with padding at 5: 0x16
+Replacing with padding at 4: 0x7f
+Replacing with padding at 3: 0xdc
+Crackinng byte at 2 of Block 0
+Original Hex: 64
+Passed:
+ [
+  {
+    "hex": "7f",
+    "message": "parse json err~",
+    "nextIntermediary": 113,
+    "nextPlain": 21
+  }
+]
+Push crack block data: {"hex":"7f","message":"parse json err~","nextIntermediary":113,"nextPlain":21}
+---
+
+Intermediaries (of next block) {"2":113,"3":210,"4":113,"5":24,"6":193,"7":14,"8":19,"9":20,"10":28,"11":102,"12":252,"13":132,"14":97,"15":155}
+Replacing with padding at 15: 0x94
+Replacing with padding at 14: 0x6e
+Replacing with padding at 13: 0x8b
+Replacing with padding at 12: 0xf3
+Replacing with padding at 11: 0x69
+Replacing with padding at 10: 0x13
+Replacing with padding at 9: 0x1b
+Replacing with padding at 8: 0x1c
+Replacing with padding at 7: 0x01
+Replacing with padding at 6: 0xce
+Replacing with padding at 5: 0x17
+Replacing with padding at 4: 0x7e
+Replacing with padding at 3: 0xdd
+Replacing with padding at 2: 0x7e
+Crackinng byte at 1 of Block 0
+Original Hex: 61
+Passed:
+ [
+  {
+    "hex": "d0",
+    "message": "parse json err~",
+    "nextIntermediary": 223,
+    "nextPlain": 190
+  }
+]
+Push crack block data: {"hex":"d0","message":"parse json err~","nextIntermediary":223,"nextPlain":190}
+---
+
+Intermediaries (of next block) {"1":223,"2":113,"3":210,"4":113,"5":24,"6":193,"7":14,"8":19,"9":20,"10":28,"11":102,"12":252,"13":132,"14":97,"15":155}
+Replacing with padding at 15: 0x8b
+Replacing with padding at 14: 0x71
+Replacing with padding at 13: 0x94
+Replacing with padding at 12: 0xec
+Replacing with padding at 11: 0x76
+Replacing with padding at 10: 0x0c
+Replacing with padding at 9: 0x04
+Replacing with padding at 8: 0x03
+Replacing with padding at 7: 0x1e
+Replacing with padding at 6: 0xd1
+Replacing with padding at 5: 0x08
+Replacing with padding at 4: 0x61
+Replacing with padding at 3: 0xc2
+Replacing with padding at 2: 0x61
+Replacing with padding at 1: 0xcf
+Crackinng byte at 0 of Block 0
+Original Hex: 50
+Passed:
+ [
+  {
+    "hex": "10",
+    "message": "",
+    "nextIntermediary": 0,
+    "nextPlain": 80
+  }
+]
+Push crack block data: {"hex":"10","message":"","nextIntermediary":0,"nextPlain":80}
+---
+
+Crack block 0 Result:
+{
+  "0": {
+    "hex": "10",
+    "message": "",
+    "nextIntermediary": 0,
+    "nextPlain": 80
+  },
+  "1": {
+    "hex": "d0",
+    "message": "parse json err~",
+    "nextIntermediary": 223,
+    "nextPlain": 190
+  },
+  "2": {
+    "hex": "7f",
+    "message": "parse json err~",
+    "nextIntermediary": 113,
+    "nextPlain": 21
+  },
+  "3": {
+    "hex": "df",
+    "message": "parse json err~",
+    "nextIntermediary": 210,
+    "nextPlain": 157
+  },
+  "4": {
+    "hex": "7d",
+    "message": "parse json err~",
+    "nextIntermediary": 113,
+    "nextPlain": 3
+  },
+  "5": {
+    "hex": "13",
+    "message": "parse json err~",
+    "nextIntermediary": 24,
+    "nextPlain": 121
+  },
+  "6": {
+    "hex": "cb",
+    "message": "parse json err~",
+    "nextIntermediary": 193,
+    "nextPlain": 162
+  },
+  "7": {
+    "hex": "07",
+    "message": "parse json err~",
+    "nextIntermediary": 14,
+    "nextPlain": 98
+  },
+  "8": {
+    "hex": "1b",
+    "message": "parse json err~",
+    "nextIntermediary": 19,
+    "nextPlain": 118
+  },
+  "9": {
+    "hex": "13",
+    "message": "parse json err~",
+    "nextIntermediary": 20,
+    "nextPlain": 46
+  },
+  "10": {
+    "hex": "1a",
+    "message": "parse json err~",
+    "nextIntermediary": 28,
+    "nextPlain": 117
+  },
+  "11": {
+    "hex": "63",
+    "message": "parse json err~",
+    "nextIntermediary": 102,
+    "nextPlain": 16
+  },
+  "12": {
+    "hex": "f8",
+    "message": "parse json err~",
+    "nextIntermediary": 252,
+    "nextPlain": 211
+  },
+  "13": {
+    "hex": "87",
+    "message": "parse json err~",
+    "nextIntermediary": 132,
+    "nextPlain": 231
+  },
+  "14": {
+    "hex": "63",
+    "message": "parse json err~",
+    "nextIntermediary": 97,
+    "nextPlain": 3
+  },
+  "15": {
+    "hex": "9a",
+    "message": "parse json err~",
+    "nextIntermediary": 155,
+    "nextPlain": 248
+  }
+}
+Plain (of next block):
+P��y�bv.u���
+(Hex: 50be159d0379a262762e7510d3e703f8)
