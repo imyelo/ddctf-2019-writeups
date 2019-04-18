@@ -1,0 +1,513 @@
+ls
+sudo su
+exit
+ls
+sudo su
+su root
+sudo su
+ls
+ll
+cd ctf_web_2/
+ls
+cat supervisor.conf
+vim supervisor.conf
+ls
+suls
+service supervisord status
+ls
+ll
+cd ctf_web_2/
+sudo su
+ls
+cd ctf_web_2/
+ls
+cd app/
+ls
+ls -al
+ls
+cd ctf_web_2/
+ls
+cd statics/
+ls
+ls -al
+rm .DS_Store
+ls
+sudo su
+ls
+mkdit ctf_web_1/
+ls
+mkdir ctf_web_1
+ls
+sudo su
+ls
+sudo su
+ls
+cd ctf_web_2/
+ls
+cat web_2.out
+ls
+rm web_2.out
+ls
+cd log/
+ls
+cat gunicorn.log
+cd ,,
+ls
+cd ..
+ls
+cd ..
+ls
+cd ctf_web_1/
+ls
+cd web_2/
+ls
+cd ..
+ls
+rm web_2/
+rm -r web_2/
+netstat -tlnp
+ls
+mkdir web_1
+source env/bin/activate
+ls
+rm -r web_2/
+ls
+cd ..
+pwd
+ls
+cd ctf_web_2/
+ls
+cd ..
+ls
+cd ctf_web_1
+ls
+rz
+# Received /Users/fz/Documents/pychram/didi_ctf_web1/ctf.zip
+ls
+mv ctf.zip  /web_1
+pwd
+mv ctf.zip
+/home/dc2-user/ctf_web_1/
+mv ctf.zip
+mv --help
+mv ctf.zip  /home/dc2-user/ctf_web_1
+ls
+cd web_1/
+ls
+mv ctf.zip  /home/dc2-user/ctf_web_1/web_1
+cd ..
+mv ctf.zip  /home/dc2-user/ctf_web_1/web_1
+ls
+cd web_1/
+ls
+unzip ctf.zip
+ls
+ls -al
+rm -r __MACOSX/
+ls
+cd statics/
+ls
+ls -al
+rm .DS_Store
+ls
+cd ..
+ls
+rm ctf.zip
+ls
+pip install -r requirements.txt
+ls
+history  | grep pip
+sudo su
+ls
+cd sudo su
+ls
+sudo su
+exit
+ls
+history
+sudo su
+exit
+sudo su
+exit
+ls
+curl htt://127.0.0.1:5000/index.html
+curl http://127.0.0.1:5000/index.html
+sudo su
+ks
+ls
+ps aux
+top
+cd ctf_web_2/
+ls
+cat start.sh
+exit
+ls
+cd ctf_web_
+cd ctf_web_2/
+ls
+history
+clear
+ls
+cd ctf_web_2/
+ls
+cd ..
+source ctf_web_2/bin/activate
+history
+sudo sure
+sudo Sure
+sudo su
+exit
+ls
+cd ctf_web_2/
+ls
+ps aux | grep 5000
+ps aux | grep gunicorn
+ls
+source ctf_web_2/bin/activate
+sudo su
+cd ..
+ls
+exit
+cd ctf_web_1/
+ls
+cd ..
+ls
+cd ctf_web_2/
+ls
+source ctf_web_2/bin/activate
+cd ..
+ls
+cd ctf_web_1/
+ls
+cd web_1/
+ls
+ps aux | grep 5050
+sudo su
+ls
+cd ..
+ls
+cd ..
+ls
+cd ..
+ls
+cd dc2-user/
+ls
+clear
+ls
+find . -name "*access*"
+find . -name "*acce"
+find . -name "*gun"
+find . -name "*gun*"
+exit
+ls
+htop
+ls
+ls -la
+ls
+supervisorctl status
+ls
+htop
+ls
+cd ctf_web_
+cd ctf_web_1
+ls
+ls -la
+cd web_1/
+ls
+ls -la
+cd ../
+ls
+htop
+ps -aux | grep guincorn
+ps -aux | grep corn
+ls
+cd ../
+ls
+cd ctf_web_2/
+ls
+cat supervisor.conf
+ls
+cat restart.sh
+ls
+pwd
+cat web_2.out
+ls
+vim restart.sh
+sudo vim restart.sh
+ls
+ls -la
+./restart.sh
+sudo ./restart.sh
+ls
+cat 2_access.log
+ls
+cat 2_access.log
+cat restart.sh
+cat 2_access.log
+cat restart.sh
+cat 2_access.log
+tail -f 2_access.log
+htop
+sudo yum install nginx
+ls
+netstat -plnbt
+netstat -plnt
+ls
+cd /etc/nginx/
+ls
+cd conf.d/
+s
+ls
+cd ../
+ls
+cd default.d/
+ls
+cd ../
+ls
+cat nginx.conf
+pwd
+cat nginx.conf
+ls
+ls -la
+sudo vim nginx.conf
+ls
+service nginx status
+ls
+netstat -plnt
+ls
+cd conf.d/
+ls
+cat ../nginx.conf
+sudo vim web1.conf
+ls
+sudo vim web1.conf
+ls
+sudo vim web1.conf
+service nginx start
+sudo service nginx start
+sudo service nginx status
+sudo vim web1.conf
+sudo service nginx start
+sudo service nginx status
+ps -uax | grep cron
+ps -uax | grep corn
+sudo service nginx start
+netstat -plnt
+cd /var/log/
+ls
+cd nginx/
+ls
+cd nginx/
+sudo cd nginx/
+ls
+sudo cd nginx/
+ls
+cd nginx/
+ls -la
+sudo cd nginx/
+ls
+sudo cd nginx
+ls
+cd nginx/
+ls
+ls -la
+chmod 707 -R nginx/
+sudo chmod 707 -R nginx/
+ls
+cd nginx/
+ls
+cat access.log
+ls
+cd ~
+ls
+cd ctf_web_1
+ls
+cd web_1/
+ls
+ls -la
+ls
+cd ../
+ls
+cd env/
+ls
+cd ../
+ls
+cd web_1/
+ls
+ls -la
+cd ../../
+ls
+cd ctf_web_
+cd ctf_web_2
+ls
+ls -la
+cd log/
+lks
+ls
+cat gunicorn.log
+;s
+cat gunicorn.err
+ls
+netstat -plnt
+ls
+ps -aux | grep gunicorn
+ls
+cd ../
+ls
+cat start.sh
+ls
+cd ../
+ls
+cd ctf_web_2/
+ls
+cat restart.sh
+cat start.sh
+ls
+cd ../
+ls
+cd ctf_web_1/
+ls
+cd web_1/
+ls
+cd ../
+ls
+cd ../
+ls
+cd ctf_web_2/
+ls
+cat restart.sh
+netstat -plnt
+ps -uax | grep guni
+ls
+cd ./
+ls
+cd ../
+ls
+cd ctf_web_1
+ls
+cd web_1/
+ls
+sudo vim restart.sh
+ls
+ls -la
+chmod 755 restart.sh
+sudo chmod 755 restart.sh
+ls
+ls -la
+ls
+sudo ./restart.sh
+htop
+ls
+cd ../
+ls
+cd ../
+ls
+cd ctf_web_2
+ls
+sudo vim restart.sh
+ls
+ls -la
+ls
+cd ../
+ls
+cd ctf_web_1
+ls
+cd web_1/
+ls
+./restart.sh
+sudo ./restart.sh
+cat restart.sh
+netstat -plnt
+ps -aux | grep 5050
+kill -9 2394
+sudo kill -9 2394
+sudo kill -9 30435
+ps -aux | grep 5050
+ls
+ls
+cd ctf_web_1/
+ls
+cd web_1/
+ls
+pwd
+ls
+cd ctf_web_2
+ls
+ps -aux | grep 5000
+kill -9 32647
+sudo kill -9 32647
+ls
+sudo ./restart.sh
+ps -aux|15000
+ps -aux| grep 15000
+ls
+cd /etc/nginx/
+ls
+cd conf.d/
+ls
+sudo vim web2.conf
+sudo service nginx reload
+ls
+sudo service nginx status
+netstat -plnt
+cd /var/lo
+cd var/log
+ls
+cd /var/
+ls
+cd log/
+ls
+cd nginx/
+ls
+cat access.log
+ls
+cat error.log
+ls
+cat error.log
+ls
+cat access.log
+ls
+cd ../
+ls
+curl 0.0.0.0:5000
+curl 0.0.0.0:5000/index.html
+sl
+ls
+cd ctf_web_2
+ls
+cat 2_access.log
+ls
+curl
+curl 127.0.0.1:1500/index.html
+curl 127.0.0.1:15000/index.html
+curl 0.0.0.0:5000/index.html
+sudo service nginx reload
+netstat -plnt
+ls
+curl 0.0.0.0:5000/index.html
+ls
+cd /var/
+ls
+cd log/
+ls
+cd nginx/
+ls
+cat error.log
+grep error.log  | 5000
+cat error.log | 5000
+cat error.log | grep 5000
+ps -aux | grep 5000
+kill -9 3049
+sudo kill -9 3049
+sudo service nginx reload
+ls
+cat error.log
+ls
+cd ctf_web_2/
+ls
+tail -f 2_access.log
+exit
+history
+sudo su
+exit
+sudo su
