@@ -21,6 +21,7 @@
     "just-split": "^2.1.0",
     "left-pad": "^1.3.0",
     "lodash": "^4.17.11",
+    "micro": "^9.3.3",
     "object-path": "^0.11.4",
     "p-all": "^2.1.0",
     "tough-cookie": "^3.0.1"
