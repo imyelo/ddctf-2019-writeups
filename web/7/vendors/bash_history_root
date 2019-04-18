@@ -1,0 +1,488 @@
+history  -w
+history  -w
+ls
+cat ~/.bash_history
+ls
+ls
+pwd
+cd /home/dc2-user/ctf_web_2/
+ls
+cd app/
+ls
+cd main/
+ls
+vim views.py
+ls
+whoami
+history
+exit
+ls
+cd ctf_web_
+cd ctf_web_1/
+ls
+history
+supervisor -c /home/dc2-user/ctf_web_2/supervisor.conf
+LS
+ls
+cd ..
+ls
+cd ctf_web_2/
+ls
+supervisor -c /home/dc2-user/ctf_web_2/supervisor.conf
+source ctf_web_2/bin/activate
+supervisor -c /home/dc2-user/ctf_web_2/supervisor.conf
+supervisor -c /home/dc2-user/ctf_web_2/supervisor.conf
+pip install supervisor
+supervisor -c /home/dc2-user/ctf_web_2/supervisor.conf
+supervisorctl status
+ls
+cat supervisor.conf
+ls
+pwd
+netstat -tlnp
+curl http://127.0.0.1:5000
+curl http://127.0.0.1:5050
+ls
+ps -aux | grep 5000
+kill -9 13837
+kill -9 18893
+kill -9 18962
+ls
+ps -aux | grep 5000
+ps -aux | grep 5000
+cd ..
+ls
+pwd
+cd /home/dc2-user/ctf_web_1
+ls
+cd web_1/
+ls
+cat web_1.out
+ls
+pstree -ap|grep gunicorn
+kill -9 14070 19310
+pstree -ap|grep gunicorn
+kill -9 19357
+ls
+pstree -ap|grep gunicorn
+/home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn manager:app -b 0.0.0.0:5050
+/home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn manager:app -b 0.0.0.0:5050
+nohup /home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn manager:app -b 0.0.0.0:5050 > web_1.out 2>&1 &
+ls
+tail web_1.out
+tail web_1.out
+tail web_1.out
+tail web_1.out
+tail web_1.out
+tail web_1.out
+ls
+cd ..
+ls
+cd ..
+ls
+cd ctf_web_2/
+ls
+vim app/
+ls
+cd app/
+ls'
+ls
+cd main/
+ls
+vim views.py
+ls
+cd ..
+ls
+cd ..
+ls
+tail web_2.out
+tail web_2.out
+la
+ls
+cd log/
+ls
+cat gunicorn.err
+tail gunicorn.err
+tail gunicorn.err
+tail gunicorn.err
+tail gunicorn.err
+tail gunicorn.log
+tail gunicorn.log
+tail gunicorn.log
+tail gunicorn.log
+tail gunicorn.log
+tail gunicorn.log
+ls
+ls
+cd ..
+ls
+tail gunicorn.log
+tail gunicorn.log
+ls
+tail log/gunicorn.log
+tail log/gunicorn.log
+tail log/gunicorn.log
+ls
+tail -20 log/gunicorn.log
+tail -20 log/gunicorn.log
+tail -50 log/gunicorn.
+tail -50 log/gunicorn.log
+cat log/gunicorn.log
+ls
+tail -50 log/gunicorn.err
+tail -100 log/gunicorn.err
+ls
+ls
+ls
+ps -aux | grep 5000
+kill -9 18982
+kill -9 22189
+ps -aux | grep 5000
+ps -aux | grep 5000
+pwd
+ps -aux | grep 5000
+netstat -tlnp
+curl http://127.0.0.1:5000/index.html
+ps -aux | grep 5000
+ps -aux | grep supervisor
+kill -9 20141
+ls
+ps -aux | grep supervisor
+ps -aux | grep 5000
+kill -9 22718
+kill -9 22723
+kill -9 22736
+ps -aux | grep 5000
+ls
+nohup /home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn didi_ctf_web2:app -b 0.0.0.0:5000 > web_2.out 2>&1 &
+ps -aux | grep 5000
+ls
+tail web_2.out
+tail web_2.out
+tail web_2.out
+tail web_2.out
+tail web_2.out
+tail web_2.out
+tail web_2.out
+tail web_2.out
+tail web_2.out
+ls
+cd ..
+ks
+ls
+cd ctf_web_1/
+ls
+cd web_1/
+ls
+tail web_1.out
+ls
+history
+ls
+ps aux | grep didi_ctf_web2.py
+ps aux | grep didi_ctf_web
+ps aux | grep 5000
+kill 22836
+kill 25892
+ps aux | grep 5000
+kill -9 22836
+ps aux | grep 5000
+nohup /home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn didi_ctf_web2:app -b 0.0.0.0:5000 > web_2.out 2>&1 &
+ps aux | grep 5000
+ls
+vi restart.sh
+vi restart.sh
+cat restart.sh
+idi_ctf_web2:app -b 0.0.0.0:5000 > web_2.out 2>&1 &
+idi_ctf_web2:app -b 0.0.0.0:5000 > web_2.out 2>&1 &
+ls
+cat restart.sh
+ps aux | grep 'gunicron' | awk '{print $2}'|xargs kill -9
+ps aux | grep 'gunicron' | awk '{print $2}'
+nohup /home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn didi_ctf_web2:app -b 0.0.0.0:5000 > web_2.out 2>&1 &
+ps aux | grep 'gunicron' | awk '{print $2}'
+ps aux | grep 'gunicron' | awk '{print $2}'
+ps aux | grep 'gunicron'
+ps aux | grep 'gunicron'
+ps aux
+ps aux
+ps aux | grep 5000
+ps aux | grep 'gunicron'
+ps aux | grep gunicron
+vi restart.sh
+chmod +x restart.sh
+ls
+./restart.sh
+cat restart.sh
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000| awk '{print $2}'|
+ps aux | grep 5000| awk '{print $2}'
+ps aux | grep 5000| awk '{print $2}'
+vi start.sh
+vi restart.sh
+cat restart.sh
+ps aux | grep 5000 | awk '{print $2}'|head -n 1
+ps aux | grep 5000
+./restart.sh
+ps aux | grep 5000
+cat restart.sh
+ps aux | grep 5000
+ps aux | grep 5000
+top
+ls
+ls
+ls
+cat restart.sh
+nohup /home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn didi_ctf_web2:app -b 0.0.0.0:5000 > web_2.out 2>&1 &
+cat restart.sh
+ps aux | grep 5000
+ls
+ps aux | grep 5000
+kill -9 26850
+ps aux | grep 5000
+nohup /home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn didi_ctf_web2:app -b 0.0.0.0:5000 > web_2.out 2>&1 &
+ps aux | grep 5000
+ps aux | grep 5000
+exit
+cat restart.sh
+ps aux
+ps aux | grep 5000
+kill -9 27121
+ps aux | grep 5000
+kill -9 27244
+ps aux | grep 5000
+kill -9 27270
+ps aux | grep 5000
+cat restart.sh
+nohup /home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn didi_ctf_web2:app -b 0.0.0.0:5000 > web_2.out 2>&1 &
+ps aux | grep 5000
+top
+ps aux | grep gun
+ls
+cd ..
+ls
+cd ctf_web_
+cd ctf_web_1
+ls
+cd env/
+ls
+cd ..
+ls
+cd ..
+ls
+cd ctf_web_
+cd ctf_web_2/
+ls
+curl 127.0.0.1:5000
+ls
+cd ctf_web_2/
+ls
+cd ..
+ls
+vi web_2.out
+tail web_2.out
+tail -f web_2.out
+ps aux
+ps aux | grep super
+ps aux | grep su
+
+ps aux | grep curl
+ps aux
+ps aux | grep 5000
+kill -9 27317
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000
+cat restart.sh
+nohup /home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn didi_ctf_web2:app -b 127.0.0.1:5000 > web_2.out 2>&1 &
+ls
+curl 127.0.0.1:5000
+curl 127.0.0.1:5000/index.html#/scan
+ps aux | grep 5000
+kill -9 27967
+ps aux | grep 5000
+nohup /home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn didi_ctf_web2:app -b 0.0.0.0:5000 >> web2.out 2>&1 &
+ps aux | grep 5000
+curl 127.0.0.1:5000/index.html#/scan
+ks
+ls
+ls
+ps aux | grep 5000
+kill -9 28042
+ps aux | grep 5000
+ps aux | grep 5000
+kill -9 28047
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000
+nohup /home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn didi_ctf_web2:app -b 0.0.0.0:5000 >> web2.out 2>&1 &
+ps aux | grep 5000
+ls
+tail -f web2.out
+ls
+ls
+ll
+ls log/
+cd log/
+ls
+tail -f gunicorn.
+tail -f gunicorn.log
+cat gunicorn.log
+cat gunicorn.err
+cd ~
+ls
+pwd
+ls
+cd ~
+cd /home/dc2-user/
+ls
+cd ctf_web_
+cd ctf_web_2/
+ls
+cd log/
+ls
+cat gunicorn.log
+ls
+cd ..
+ls
+cat supervisor.conf
+ls
+find . gunicorn
+find . -name gunicorn
+find . -name guni
+find . -name guni*
+find . -name *access*
+find . -name *guni*
+ll
+ll
+top
+ps aux
+ps aux | grep gun
+ls
+ls /
+ls
+ls
+cd app/
+ls
+cd ..
+ls
+cat didi_ctf_web2.py
+ls
+tail web2.out
+vi  web2.out
+vi  web2.out
+ls
+ps aux | grep 5000
+kill -9 29481
+ps aux | grep 5000
+ps aux | grep 5000
+kill -9 28151
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000
+kill -9 29548
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000
+ps aux | grep 5000
+
+ls
+ps aux
+ps aux | grep 5050
+exit
+history
+tail -f web_1.out
+ps aux | grep 5050
+kill -9 21115
+ps aux | grep 5050
+ps aux | grep 5050
+ps aux | grep 5050
+ps aux | grep 29905
+kill -9 29905
+ps aux | grep 29905
+history
+nohup /home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn manager:app -b 0.0.0.0:5050 > web_1.out 2>&1 &
+ps aux | grep 29905
+ps aux | grep 5005
+ps aux | grep 5005
+ps aux | grep 5005
+ps aux | grep 5050
+ps aux | grep 5050
+top
+htop
+yum install htop
+htop
+ls
+tail -f web_1.out
+ps aux | grep 5050
+ps aux
+ps aux | grep guni
+ps aux | grep 5050
+kill -9 29984
+ps aux | grep 5050
+ps aux | grep 5050
+ps aux | grep 5050
+ps aux | grep 5050
+ps aux | grep 5050
+ps aux | grep 5050
+ps aux | grep 5050
+ps aux | grep 5050
+ps aux | grep 5050
+ps aux | grep 5050
+ps aux | grep 5050
+nohup /home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn manager:app -b 127.0.0.1:5050 > web_1.1.out 2>&1
+ps aux | grep 5050
+nohup /home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn manager:app -b 127.0.0.1:5050 > web_1.1.out 2>&1 &
+ps aux | grep 5050
+curl 127.0.0.1:5050
+curl 127.0.0.1:5050/index.htm
+ps aux | grep 5050
+kill -9 30346
+ps aux | grep 5050
+ps aux | grep 5050
+kill -9 30351
+ps aux | grep 5050
+nohup /home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn manager:app -b 0.0.0.0:5050 >> web_1.2.out 2>&1 &
+htop
+ls
+cd ..
+ls
+cd ..
+ls
+cd ctf_web_2/
+ls
+cat restart.sh
+nohup /home/dc2-user/ctf_web_2/ctf_web_2/bin/gunicorn didi_ctf_web2:app -b 0.0.0.0:5000 > web_2.out 2>&1 &
+ps aux | grep 50
+vi restart.sh
+exit
+ls
+vim web2/app/main/views.py
+vim /home/dc2-user/web2�  /app/main/views.py
+vim /home/dc2-user/ctf_web_2/app/main/views.py
+history
+exit
+ls
+pwd
+history
+cat /root/.bash_history
+ls
+cd ctf_web_2/
+ls
+cat app/main/views.py
+ls
+ps -aux
+ps -aux | grep 5000
+cat /root/.bash_history
+ls
+history | grep wget

