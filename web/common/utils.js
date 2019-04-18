@@ -9,22 +9,4 @@ const base64 = {
   }
 }
 
-const ascii = {
-  decode (str) {
-    let output = ''
-    for (let index = 0; index < str.length; index += 2) {
-      output = output + String.fromCharCode(parseInt(str.slice(index, index + 2), 16))
-    }
-    return output
-  },
-  encode (str) {
-    let output = ''
-    for (let index = 0; index < str.length; index++) {
-      output = output + str.charCodeAt(index).toString(16)
-    }
-    return output
-  },
-}
-
 exports.base64 = base64
-exports.ascii = ascii

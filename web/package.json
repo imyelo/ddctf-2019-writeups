@@ -25,6 +25,7 @@
     "micro": "^9.3.3",
     "object-path": "^0.11.4",
     "p-all": "^2.1.0",
+    "p-queue": "^5.0.0",
     "tough-cookie": "^3.0.1"
   }
 }

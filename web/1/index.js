@@ -5,21 +5,22 @@ const cheerio = require('cheerio')
 const flatten = require('just-flatten-it')
 const pAll = require('p-all')
 const Gauge = require('gauge')
-const { base64, ascii } = require('../common/utils')
+const { base64 } = require('../common/utils')
 
 const FETCH_CONCURRENCY = 5
 
-function decrypt (input) {
+function decode (input) {
   input = base64.decode(base64.decode(input))
-  return ascii.decode(input)
+  return Buffer.from(input, 'hex').toString()
 }
 
-function encrypt (input) {
-  return base64.encode(base64.encode(ascii.encode(input)))
+function encode (input) {
+  let hex = Buffer.from(input).toString('hex')
+  return base64.encode(base64.encode(hex))
 }
 
 async function fetch (filename) {
-  const url = `http://117.51.150.246/index.php?jpg=${encrypt(filename)}`
+  const url = `http://117.51.150.246/index.php?jpg=${encode(filename)}`
   const { body } = await got(url, {
     headers: {
       'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
@@ -96,8 +97,8 @@ async function scan () {
       all: 0,
       done: 0,
     }
-    const requests = flatten(filenames.map((name) => 
-      getFilenameFunctions.map((getFilename) => 
+    const requests = flatten(filenames.map((name) =>
+      getFilenameFunctions.map((getFilename) =>
         () => fetch(getFilename(name)).then((response) => {
           gauge.show('Fetch', ++counter.done / counter.all)
           return response
