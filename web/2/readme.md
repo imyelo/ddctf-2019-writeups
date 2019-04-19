@@ -141,9 +141,9 @@ auth('admin')
 
 一发入魂。（不愧是我.gif
 
-紧接着跟着提示来到 [`app/fL2XID2i0Cdh.php`](./web/2/clues/fL2XID2i0Cdh.php)，获得两份文件的源代码。
+紧接着跟着提示来到 [`app/fL2XID2i0Cdh.php`](./clues/fL2XID2i0Cdh.php)，获得两份文件的源代码。
 
-[Application.php](./web/2/clues/app/Application.php)：
+[Application.php](./clues/app/Application.php)：
 
 ```php
 <?php
@@ -200,7 +200,7 @@ public function __destruct() {
 ```
 
 
-[Session.php](./web/2/clues/app/Session.php)：
+[Session.php](./clues/app/Session.php)：
 
 ```php
 <?php
@@ -619,10 +619,10 @@ const createClient = () => {
 
 ### 涉及资料
 - 源代码
-  - [获取 key](./web/2/step2.js)
-  - [生成序列化 session](./web/2/serialize.php)
-  - [获取 flag](./web/2/step2.js)
-  - [完整通关脚本](./web/2/step2.js)
+  - [获取 key](./step2.js)
+  - [生成序列化 session](./serialize.php)
+  - [获取 flag](./step2.js)
+  - [完整通关脚本](./step2.js)
 - 知识点
   - [PHP 反序列化触发命令执行](https://ctf-wiki.github.io/ctf-wiki/web/php/php/#_14)
   - ~~[登入界面中，「登录」和「登陆」哪个正确？](https://www.zhihu.com/question/19570377)~~

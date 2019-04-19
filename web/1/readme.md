@@ -76,7 +76,7 @@ let url = `http://117.51.150.246/index.php?jpg=${encode('index.php')}`
 // <- "http://117.51.150.246/index.php?jpg=TmprMlpUWTBOalUzT0RKbE56QTJPRGN3"
 ```
 
-访问后发现页面上的字符串已经变成 `index.php`；然后提取出 `<img>` 的 `src` 值，[取出 base64 的部分](https://en.wikipedia.org/wiki/Data_URI_scheme#Syntax) 并做解码，便成功得到 [源文件内容](./web/1/clues/index.php)：
+访问后发现页面上的字符串已经变成 `index.php`；然后提取出 `<img>` 的 `src` 值，[取出 base64 的部分](https://en.wikipedia.org/wiki/Data_URI_scheme#Syntax) 并做解码，便成功得到 [源文件内容](./clues/index.php)：
 
 ```php
 <?php
@@ -354,8 +354,8 @@ Buffer.from(:436f6e67726174756c6174696f6e73', 'hex').toString()
 
 ### 涉及资料
 - 源代码
-  - [扫描器脚本](./web/1/scan.js)
-  - [完整通关脚本](./web/1/index.js)
+  - [扫描器脚本](./scan.js)
+  - [完整通关脚本](./index.js)
 - 知识点
   - [data URI scheme - Syntax](https://en.wikipedia.org/wiki/Data_URI_scheme#Syntax)
   - [Node.js - Buffer](https://nodejs.org/dist/latest-v11.x/docs/api/buffer.html)
