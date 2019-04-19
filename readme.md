@@ -8,7 +8,7 @@
 - [0x01. Web 1 - 滴](./web/1/readme.md)
 - [0x02. Web 2 - Web 签到题](./web/2/readme.md)
 - [0x03. Web 3 - Upload IMG](./web/3/readme.md)
-- 0x04. Web 4 - Homebrew Event Loop
+- [0x04. Web 4 - Homebrew Event Loop](./web/4/readme.md)
 - 0x04. Web 5 - 欢迎报名 DDCTF
 - 0x04. Web 6 - 大吉大利 今晚吃鸡
 - 0x04. Web 7 - MySQL 弱口令
