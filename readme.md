@@ -1,5 +1,5 @@
 # DDCTF-2019 Writeups
-> Node.js 选手的 DDCTF 2019 WP
+> 一名 Node.js 选手的 DDCTF 2019 WP
 
 ## 0x00. Intro
 上周侄子 ~~（对呀我就是老年组选手~~ 发来 [一个链接](https://ddctf.didichuxing.com/)，发现是类似十多年前 [CSKSoft](http://www.csksoft.net) 高手挑战 ([1](http://www.csksoft.net/netcompet1/game1.htm), [2](http://www.csksoft.net/NetCompet2/)) 的游戏，才知道原来现在 [CTF](https://en.wikipedia.org/wiki/Capture_the_flag#Computer_security) 氛围这么好，后知后觉之余仿佛打开了新世界的大门。
@@ -82,7 +82,7 @@ let url = `http://117.51.150.246/index.php?jpg=${encode('index.php')}`
 // <- "http://117.51.150.246/index.php?jpg=TmprMlpUWTBOalUzT0RKbE56QTJPRGN3"
 ```
 
-访问该地址，发现页面上的字符串已经变成 `index.php`；然后提取出 `<img>` 的 `src` 值并做 base64 解码，便成功得到 [源文件内容](./web/1/vendors/index.php)：
+访问后发现页面上的字符串已经变成 `index.php`；然后提取出 `<img>` 的 `src` 值，[取出 base64 的部分](https://en.wikipedia.org/wiki/Data_URI_scheme#Syntax) 并做解码，便成功得到 [源文件内容](./web/1/clues/index.php)：
 
 ```php
 <?php
@@ -124,7 +124,9 @@ Review 代码后可以了解到：
 3. 目前所能做的事情仅有读取指定文件，但我们仍未知道应该读取哪个文件。
 
 那么剩下的线索只有 [文件头部注释的链接](https://blog.csdn.net/FengBanLiuYun/article/details/80616607) 了。
-指过去的是 CSDN 的一篇博客 —— 「命令 echo」，但很明显此 `echo` 非 `index.php` 中的 `echo`，所以博文内容并没有包含什么有用的信息。 ~~（倒是评论区已经开始「打卡」并「暴打出题人」了~~
+指过去的是 CSDN 的一篇博客 —— 「命令 echo」，但很明显此 `echo` 非 `index.php` 中的 `echo`，所以博文内容并没有包含什么有用的信息。
+
+~~（倒是评论区已经开始「打卡」并「暴打出题人」了 wwwwww~~
 
 于是尝试暴力扫描可能命中的文件，这里用 Node.js 快速写个脚本：
 
@@ -244,7 +246,7 @@ curl -s https://raw.githubusercontent.com/SwiftieTerrence/ctfwebscan/a64f510/dic
   // ...
 ```
 
-并把文中示例的文件名 `practice.txt` 也加入字典：
+并把文中示例使用的文件名 `practice.txt` 也加入字典：
 
 ```sh
 { curl -s https://raw.githubusercontent.com/SwiftieTerrence/ctfwebscan/master/dic.txt ; echo "\npractice.txt" } | node ./scan.js
@@ -343,7 +345,29 @@ const got = require('got')
 })()
 ```
 
-获得 flag `"DDCTF{436f6e67726174756c6174696f6e73}"`，成功通关。
+获得 flag `"DDCTF{436f6e67726174756c6174696f6e73}"`，拿下第一关 :v:。
+
+### Bonus
+等一等，flag 的值看起来是一段 Hex，转字符串试试：
+
+```javascript
+Buffer.from(:436f6e67726174756c6174696f6e73', 'hex').toString()
+// <- "Congratulations"
+```
+
+![](https://media.giphy.com/media/1g37uzZ6mSu8GDOczN/giphy.gif)  
+![](https://media.giphy.com/media/8Rx1VaCae7OCs/giphy.gif)  
+
+### 涉及资料
+- 源代码
+  - [扫描器脚本](./web/1/scan.js)
+  - [完整通关脚本](./web/1/index.js)
+- 知识点
+  - [data URI scheme - Syntax](https://en.wikipedia.org/wiki/Data_URI_scheme#Syntax)
+  - [Node.js - Buffer](https://nodejs.org/dist/latest-v11.x/docs/api/buffer.html)
+  - [extract() 变量覆盖](https://ctf-wiki.github.io/ctf-wiki/web/php/php/#extract)
+  - [远程文件包含 - PHP 流 input](https://ctf-wiki.github.io/ctf-wiki/web/php/php/#_3)
+
 
 ## Web 0x02 WEB 签到题
 ### 题目
