@@ -1,10 +1,10 @@
-## 0x02. Web 2 - Web 签到题
-### 题目
+# 0x02. Web 2 - Web 签到题
+## 题目
 > WEB 签到题  
 > 
 > http://117.51.158.44/index.php
 
-### 解题过程
+## 解题过程
 打开题目入口后，页面显示 *抱歉，您没有登陆权限，请获取权限后访问-----*。~~（录字打错了兄弟~~
 
 首页的 HTTP 包数据：
@@ -617,7 +617,7 @@ const createClient = () => {
 
 获得 flag `DDCTF{ddctf2019_G4uqwj6E_pHVlHIDDGdV8qA2j}`，顺利拿下第二关 :v:。
 
-### 涉及资料
+## 涉及资料
 - 源代码
   - [获取 key](./step2.js)
   - [生成序列化 session](./serialize.php)
@@ -628,5 +628,6 @@ const createClient = () => {
   - ~~[登入界面中，「登录」和「登陆」哪个正确？](https://www.zhihu.com/question/19570377)~~
   - ~~[encrypt 是什么意思](http://dict.cn/encrypt)~~
 
-### EOF
+## EOF
+[下一题](../3/readme.md)  
 [回到目录](../../readme.md)

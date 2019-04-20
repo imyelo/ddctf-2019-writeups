@@ -1,10 +1,10 @@
-## 0x01. Web 1 - 滴
-### 题目
+# 0x01. Web 1 - 滴
+## 题目
 > 滴~  
 > 
 > http://117.51.150.246  
 
-### 解题过程
+## 解题过程
 访问题目入口会自动跳转到这个地址：
 
 ```text
@@ -117,10 +117,10 @@ Review 代码后可以了解到：
 2. 黑名单过滤存在明显的逻辑冲突，这导致最终文件名可以出现白名单中没有的 `!`；
 3. 目前所能做的事情仅有读取指定文件，但我们仍未知道应该读取哪个文件。
 
-那么剩下的线索只有 [文件头部注释的链接](https://blog.csdn.net/FengBanLiuYun/article/details/80616607) 了。
+那么剩下的线索只有 [文件头部注释的链接](https://blog.csdn.net/FengBanLiuYun/article/details/80616607) 了。  
 指过去的是 CSDN 的一篇博客 —— 「命令 echo」，但很明显此 `echo` 非 `index.php` 中的 `echo`，所以博文内容并没有包含什么有用的信息。
 
-~~（倒是评论区已经开始「打卡」并「暴打出题人」了 wwwwww~~
+~~（倒是评论区已经在「暴打出题人」了 wwwwww~~
 
 于是尝试暴力扫描可能命中的文件，这里用 Node.js 快速写个脚本：
 
@@ -218,7 +218,7 @@ curl -s https://raw.githubusercontent.com/SwiftieTerrence/ctfwebscan/a64f510/dic
 
 ~~那么这题至此就可以放弃了。~~
 
-回到唯一的线索 —— [「命令 echo」](https://blog.csdn.net/FengBanLiuYun/article/details/80616607)。
+回到唯一的线索 —— [「命令 echo」](https://blog.csdn.net/FengBanLiuYun/article/details/80616607)。  
 翻遍作者的其它文章，~~通过阅读量和评论数~~ 找到另一篇文章 [「vim 异常退出 swp文件提示」](https://blog.csdn.net/FengBanLiuYun/article/details/80913909) ，似乎暗示着我们的目标是一个 vim 交换文件，于是针对文章中提到的三层交换文件修改扫描脚本：
 
 ```javascript
@@ -250,7 +250,7 @@ curl -s https://raw.githubusercontent.com/SwiftieTerrence/ctfwebscan/a64f510/dic
 
 ~~那么这题至此又可以放弃了。~~
 
-在被这道关卡卡住一天之后，看着 `index.php` 中的 `</br>`，我鬼使神差地意识到出题人也许还犯了其他低级错误。于是把扫描脚本改为：
+在被这道关卡卡住一晚之后，看着 `index.php` 中的 `</br>`，我鬼使神差地意识到出题人也许还犯了其他低级错误。于是把扫描脚本改为：
 
 ```diff
   filenames = flatten(filenames.map((name) => [
@@ -285,10 +285,10 @@ curl -s https://raw.githubusercontent.com/SwiftieTerrence/ctfwebscan/a64f510/dic
 
 惊了。
 
-心情复杂.jpg  
+![心情复杂.jpg ](./clues/flag.jpg)  
 ~~我替黄旭东祝滴滴越办越好~~
 
-无论如何，终于还是拿到了下一个线索 `flag!ddctf.php`。
+无论如何，终于还是拿到了下一个线索 `flag!ddctf.php`。  
 结合前面对 `index.php` 的解读，这一步就显得非常简单了：
 
 ```javascript
@@ -324,7 +324,7 @@ Review 后发现这里涉及两个 ~~CTF~~ 常见的 PHP 的安全问题：
 1. [extract() 变量覆盖](https://ctf-wiki.github.io/ctf-wiki/web/php/php/#extract)
 2. [远程文件包含 - PHP 流 input](https://ctf-wiki.github.io/ctf-wiki/web/php/php/#_3)
 
-构造请求参数 `k=php://input`，使 `$content` 值等于 Request Body 的内容；并把相同的值（如 `yelo`）传入参数 `uid` 和 Request Body；使得最终 `$uid == $content`：
+于是构造请求参数 `k=php://input`，使 `$content` 值等于 Request Body 的内容；并把相同的值（如 `yelo`）传入参数 `uid` 和 Request Body；使得最终 `$uid == $content`：
 
 ```javascript
 const got = require('got')
@@ -341,7 +341,7 @@ const got = require('got')
 
 获得 flag `DDCTF{436f6e67726174756c6174696f6e73}`，拿下第一关 :v:。
 
-### Bonus
+## Bonus
 等一等，flag 的值看起来是一段 Hex，转字符串试试：
 
 ```javascript
@@ -351,7 +351,7 @@ Buffer.from(:436f6e67726174756c6174696f6e73', 'hex').toString()
 
 ![](https://media.giphy.com/media/1g37uzZ6mSu8GDOczN/giphy.gif)  
 
-### 涉及资料
+## 涉及资料
 - 源代码
   - [扫描器脚本](./scan.js)
   - [完整通关脚本](./index.js)
@@ -361,5 +361,6 @@ Buffer.from(:436f6e67726174756c6174696f6e73', 'hex').toString()
   - [PHP extract() 变量覆盖](https://ctf-wiki.github.io/ctf-wiki/web/php/php/#extract)
   - [PHP 远程文件包含 - PHP 流 input](https://ctf-wiki.github.io/ctf-wiki/web/php/php/#_3)
 
-### EOF
+## EOF
+[下一题](../2/readme.md)  
 [回到目录](../../readme.md)

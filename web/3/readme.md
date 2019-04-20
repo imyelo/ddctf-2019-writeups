@@ -1,12 +1,12 @@
-## 0x03. Web 3 - Upload IMG
-### 题目
+# 0x03. Web 3 - Upload IMG
+## 题目
 > Upload-IMG  
 > 
 > http://117.51.148.166/upload.php  
 > user：dd@ctf  
 > pass：DD@ctf#000  
 
-### 解题过程
+## 解题过程
 用题目的用户名和密码访问入口：
 
 TODO:home.screenshot.jpg
@@ -275,7 +275,7 @@ node ./upload.js ./vendors/inject-output/2.jpg
 于是获得 flag `DDCTF{B3s7_7ry_php1nf0_b92ef5babce79fad}`，顺利拿下第三关 :v:。
 
 
-### 涉及资料
+## 涉及资料
 - 源代码
   - [上传文件](./upload.js)
   - [向相同片段注入数据](./inject.js)
@@ -284,5 +284,6 @@ node ./upload.js ./vendors/inject-output/2.jpg
   - [upload-labs](https://github.com/c0ny1/upload-labs)
   - [upload-labs 之 pass 16 详细分析](https://xz.aliyun.com/t/2657)
 
-### EOF
+## EOF
+[下一题](../4/readme.md)  
 [回到目录](../../readme.md)
