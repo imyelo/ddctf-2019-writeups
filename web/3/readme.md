@@ -39,7 +39,7 @@ TODO:upload-1.screenshot.jpg
 <img src="image/190413104517_315539082.jpg"><br>[Check Error]上传的图片源代码中未包含指定字符串:<font color="red">phpinfo()</font>
 ```
 
-所以意思是要把 phpinfo() 塞进文件里咯。
+所以意思是要把 `phpinfo()` 塞进文件里咯。
 
 ![](https://media.giphy.com/media/8Rx1VaCae7OCs/giphy.gif)
 
@@ -135,7 +135,7 @@ node ./upload.js vendors/probe.jpg
 
 居然失败了。
 
-把上传后的文件下载下来，比对发现尾部内容消失了，文件体积也明显和原来不一样 (38KB -> 28KB) —— 看样子是经历了 **二次渲染**：
+把上传后的文件下载下来，比对发现尾部内容消失了，文件体积也明显和原来不一样 (38KB -> 28KB) —— 看样子是经历了 **二次渲染**： ~~（有趣~~
 
 ```sh
 curl -u dd@ctf:DD@ctf#000 -s http://117.51.148.166/image/190419094301_1940362407.jpg | xxd

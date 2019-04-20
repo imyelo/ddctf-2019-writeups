@@ -130,7 +130,7 @@ function auth() {
 // <- undefined
 ```
 
-~~舒服多了，~~ 然后试下 `admin`：
+~~舒服多了，~~ 然后试下 magic word `admin`：
 
 ```javascript
 auth('admin')
@@ -356,7 +356,7 @@ $ddctf->index();
     ```
     (Application.php:L10-L17)
 
-3. Application 作为父类，定义了 **解构方法**；在解构过程中 **可以输出指定路径的文件内容**，但条件是路经值长度为 18，且该路径值会先经历一次 sanitize；路经值取 `$this->path`，但代码中并没有出现更改值的接口。
+3. Application 作为父类，定义了 **解构方法**；在解构过程中 **可以输出指定路径的文件内容**，但条件是路经值长度为 18，且该路径值会先经历一次 sanitize；路经值取 `$this->path`，但代码中并没有出现更改值的接口。(有趣
 
     ```php
     public function __destruct() {
@@ -374,7 +374,7 @@ $ddctf->index();
     ```
     (Application.php:L37-L48)
 
-4. 对路径做 sanitize 的函数会先去除了值头尾的空格，然后依次过滤 **一次** `'../'` 和 `'..\\'`。
+4. 对路径做 sanitize 的函数会先去除了值头尾的空格，然后依次过滤 **一次** `'../'` 和 `'..\\'`。（就一次！
 
     ```php
     private function sanitizepath($path) {
@@ -551,8 +551,7 @@ $data = sprintf($data, $this->eancrykey);
 
 获得了 key，意味着可以构造任意内容的 session（根据 #9 的规则）。
 
-接下来利用 [#11 的反序列化触发 #3 的解构方法执行](https://ctf-wiki.github.io/ctf-wiki/web/php/php/#_14)，并借此为 `$this->path` 赋值。
-
+接下来利用 [#11 的反序列化触发 #3 的解构方法执行](https://ctf-wiki.github.io/ctf-wiki/web/php/php/#_14)，并借此为 `$this->path` 赋值。  
 这里快速地写一个 PHP，帮助生成序列化的 session:
 
 ```php
@@ -571,11 +570,11 @@ $data = sprintf($data, $this->eancrykey);
 
 那么 `path` 应该是什么呢？
 
-根据 #8 的注释，暂猜测目标文件是 `../config/flag.txt`，长度刚好就是 18，但还需要先通过 sanitize。
-
+根据 #8 的注释，暂猜测目标文件是 `../config/flag.txt`，长度刚好就是 18，但还需要先通过 sanitize。  
 回到 #4，可以发现 sanitize 函数对 `'../'` 的过滤操作仅仅只做了一次。于是构造出字符串 `....//config/flag.txt`，使 sanitize 后的值恰好为 `../config/flag.txt`。
 
 修改刚才的 PHP 脚本：
+
 ```diff
 -    var $path = "TODO";
 +    var $path = "....//config/flag.txt";
