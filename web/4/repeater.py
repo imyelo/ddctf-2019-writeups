@@ -93,9 +93,10 @@ class RollBackException: pass
 
 
 # playground ---
-def main():
+if (__name__ == '__main__'):
 	print '--- SERVER UP ---'
 	# entry('action:view;3') # work
+	# entry('action:FLAG#;') # denied
 	# entry('action:eval#;FLAG()') # denied
 	# entry('action:buy;3') # work
 	# entry('action:buy;999') # denied, rollback
@@ -104,5 +105,3 @@ def main():
 	print '--- SERVER DOWN ---'
 	print 'Result:'
 	print session
-
-main()
