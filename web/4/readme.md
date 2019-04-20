@@ -163,7 +163,7 @@ if __name__ == '__main__':
 
 Review 整个源文件，可以得到很明确的目标：捕获 `FLAG()` 函数的返回值。
 
-从唯一一处调用 `FLAG()` 函数的 `get_flag_handler(args)` 向上分析：
+从唯一一处调用 `FLAG()` 函数的 `get_flag_handler(args)` 快速向上分析：
 1. 必须是在 `session['num_items'] >= 5` 时执行 `get_flag_handler(args)` 才能使 `FLAG()` 函数执行。
 2. 此处函数 `FLAG()` 执行后的返回值会被拼接后传入 `trigger_event(event)`。
 3. 所有 `trigger_event(event)` 执行时的参数 `event` 都会被写入 session 中的日志 (`session['log']`)。（很诡异了
@@ -194,8 +194,8 @@ def entry_point():
 
 1. 接受 QueryString，并作为 `event` 参数调用 `trigger_event(event)`。
 2. Querystring 只允许以 `'action:'` 开头，长度不得超过 100 字符；否则都将被过滤并改为调用 `trigger_event('action:index;False#False')`。
-3. Session 为空时会自动重置为初始值。
-4. Session 在操作前会先把原值拷贝至当前请求实例中。
+3. Session 为空时会自动重置为默认值。
+4. Session 在操作前会先把原值拷贝至当前请求实例中，应该是作为备份。
 5. 此处调用 `trigger_event(event)` 后，会立即调用 `execute_event_loop()`。
 
 那么 `execute_event_loop()`  干了什么呢：
@@ -238,14 +238,14 @@ def execute_event_loop():
 
 1. 不断从请求实例的 `event_queue` 队列中取出最前的一个事件。
 2. 取出的事件会被解析成类型 (action or function) 、动作名和参数值数组的组合；并以这三段数据调用指定的句柄方法 (handler)。（相当于自己造路由！
-3. 捕获到自定义的回滚异常 (RollBackException) 时，把 Session 中的 `num_items` 和 `points` 数据回滚至刚收到请求时的状态。（有必要，但从写代码的角度说，这个操作放在这里稍显不合适
+3. 捕获到自定义的回滚异常 (RollBackException) 时，把 Session 中的 `num_items` 和 `points` 数据回滚至刚收到请求时的状态。（有必要 ~~，但从写代码的角度说，这个操作放在这里稍显不合适~~
 4. 将 handler 执行的结果拼接，并响应回给客户端。
 
 所以！
 点题了！
 出题人在这里实现了个简单的 [Event Loop](https://en.wikipedia.org/wiki/Event_loop) !
 
-回顾前面的代码，便能理解 `trigger_event(event)` 的意义： **为 Event Loop 提供推任务入队列的接口** —— 这也就意味着，这是一个 **异步** 操作。
+回顾前面的代码，便能理解 `trigger_event(event)` 的意义： **为 Event Loop 提供推任务入队列的接口** —— 这也就意味着，这是一个 **异步** 操作。（注意了
 
 接着回到刚才的 `execute_event_loop()` 。在出题人自己造的路由 ~~（homebrew router~~ 里出现了一个 `eval`，用于实现 handler 调用：
 
@@ -261,18 +261,18 @@ ret_val = event_handler(args)
 1. 这两个变量来自于 Event Loop 队列中的每一个 `event`。
 2. `event` 中第一段介于 `':'` 和 `';'` 的值为 `action`。
 3. `action + ';'` 后方的全部值通过 `#` 分割为 `args` 数组。
-4. 根据 `action` 前方的值将解析出句柄方法类型，有且仅有两种值：`'action:'` 对应 `'_handler'`，`'func:'` 对应 `'_function'`；该值会在后续 `eval(...)` 时添加至参数尾部；这样做的目的是限制该 `eval` 访问的方法只允许是根据该约定命名的 handler（算是一种沙箱保护）。
+4. 根据 `action` 前方的值将解析出句柄方法类型，有且仅有两种值：`'action:'` 对应 `'_handler'`，`'func:'` 对应 `'_function'`；该值会在后续 `eval(...)` 时添加至参数尾部；这样做的目的是限制该 `eval` 访问的方法只允许是根据该约定命名的 handler（算是一种不太严谨的沙箱保护）。
 5. `event` 的值在被解析前会先经历一次白名单检查；如果出现了不在白名单内的字符，将直接结束 Event Loop（不执行本次任务并丢弃后续所有任务）；白名单内的字符为：
 
     ```
     abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789:;#
     ```
 
-这也就解释了 `entry_point()` 中 QueryString 限制的意图：限制客户端直接触发的 handler 名必须含后缀 `'_handler'`。
+这也就解释了 `entry_point()` 中 QueryString 限制的意图：限制由客户端直接触发的 handler 名必须含后缀 `'_handler'`。
 
 但这个限制真的有效吗？
 
-源代码中给出字符白名单虽然很干净，没有空格、引号和括号，但却出现了 `#` —— 恰好可以被利用于绕过这个后缀限制：
+源代码中给出字符白名单虽然很干净，没有空格、引号和括号，但却出现了 `#` —— 恰好可以被利用于绕过后缀限制：
 
 ```python
 # 伪代码
@@ -291,9 +291,9 @@ You naughty boy! ;)
 ```
 
 但还好这只是小试牛刀。
-我们还可以调用 handler 之外的其他方法；但受限于 Python 解释器的参数检查，在执行 `event_handler(args)` 时，这个方法必须接受一个参数，参数值即 args 数组。
+我们还可以调用 handler 之外的其他方法；但受限于 Python 解释器的参数检查，在执行 `event_handler(args)` 时，这个方法还必须接受一个参数，参数值即 args 数组。
 
-嗯，是不是想起了 `trigger_event(event)` 中解析数组参数的骚操作？试一下：
+嗯，是不是想起了 `trigger_event(event)` 中兼容数组类型参数的骚操作？来试一下：
 
 ```javascript
 // 别忘了编码
@@ -323,22 +323,24 @@ OK. 这一条线索可以先放一边了。
 #### Cookie Session
 在 `trigger_event(event)` 中另一个诡异的操作是往 session 里写日志。
 
-因为不了解 Python，所以查了一下 [Flask 的文档](http://flask.pocoo.org/docs/1.0/quickstart/#sessions)，发现 Flask 内置的 session 是典型的 Cookie Session。
+因为不了解 Python，所以先查了一下 [Flask 的文档](http://flask.pocoo.org/docs/1.0/quickstart/#sessions)，发现 Flask 内置的 session 模块是典型的 Cookie Session。
 
-在 Node.js 的 express 和 koa 也有基于 [pillarjs/cookies](https://github.com/pillarjs/cookies) 的类似模块：
+Node.js 的 express 和 koa 框架也有类似的模块：
 - [koajs/session](https://github.com/koajs/session)
 - [expressjs/cookie-session](https://github.com/expressjs/cookie-session)
 
+（这两个模块都基于 [pillarjs/cookies](https://github.com/pillarjs/cookies) 实现）
+
 甚至前面另一道题 [web2](../2/readme.md) 中的 session 也是属于这种机制。
 
-正如 Flask 文档所述，这种存放在 cookie 中的 session 是客户端可读但不可改的：
+正如 Flask 文档所述，这种存放在 cookie 中的 session 是客户端不可改但可读的：
 
 > This is implemented on top of cookies for you and signs the cookies cryptographically. What this means is that the user could look at the contents of your cookie but not modify it, unless they know the secret key used for signing.
 > —— [Flask Session](http://flask.pocoo.org/docs/1.0/quickstart/#sessions)
 
 [phith0n 的这篇文章](https://www.leavesongs.com/PENETRATION/client-session-security.html) 详细介绍了错误使用这类 session 引发的安全问题以及利用方式。
 
-解析出 flask session 原始值的方法并不复杂，这里我用 Node.js 写个脚本：
+回到题目中来 —— 解析出 flask session 原始值的方法并不复杂，这里我用 Node.js 写个脚本：
 
 ```javascript
 const zlib = require('zlib')
@@ -352,7 +354,7 @@ console.log(JSON.stringify(decrypt('.eJyrVsrJT1eyiq5WUkhSslKKDPczSAy3LPXPiyqIikg
 // <- {"log":[{" b":"YWN0aW9uOnZpZXc7aW5kZXg="},{" b":"YWN0aW9uOnRyaWdnZXJfZXZlbnQjO2FjdGlvbjpidXk7MSNhY3Rpb246YnV5OzE="},[{" b":"YWN0aW9uOmJ1eTsx"},{" b":"YWN0aW9uOmJ1eTsx"}],[{" b":"ZnVuYzpjb25zdW1lX3BvaW50OzE="},{" b":"YWN0aW9uOnZpZXc7aW5kZXg="}],[{" b":"ZnVuYzpjb25zdW1lX3BvaW50OzE="},{" b":"YWN0aW9uOnZpZXc7aW5kZXg="}]],"num_items":2,"points":1}
 ```
 
-那么再提取 `session["log"]` 的值并做 base64 解码：
+然后提取 `session["log"]` 的值并做 base64 解码：
 
 ```javascript
 const flatten = require('just-flatten-it')
