@@ -283,3 +283,6 @@ node ./upload.js ./vendors/inject-output/2.jpg
 - 知识点
   - [upload-labs](https://github.com/c0ny1/upload-labs)
   - [upload-labs 之 pass 16 详细分析](https://xz.aliyun.com/t/2657)
+
+### EOF
+[回到目录](../../readme.md)
