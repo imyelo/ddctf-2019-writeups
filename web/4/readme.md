@@ -1,12 +1,12 @@
-## 0x04. Web 4 - Homebrew Event Loop
-### 题目
+# 0x04. Web 4 - Homebrew Event Loop
+## 题目
 > homebrew event loop
 > 
 > Flag格式：DDCTF{.....}，也就是请手动包裹上DDCTF{}  
 > http://116.85.48.107:5002/d5af31f66147e857  
 
-### 解题过程
-#### First time Review
+## 解题过程
+### First time Review
 这是一道非常有意思的题目。
 
 通过题目入口可以直接拿到 [Python 源文件](http://116.85.48.107:5002/d5af31f66147e857/?action:index;True%23False)：
@@ -171,9 +171,9 @@ Review 整个源文件，可以得到很明确的目标：捕获 `FLAG()` 函数
 5. `trigger_event(event)` 的参数 `event` 可以是字符串类型或者数组类型。（很美但没必要，这里也有点诡异
 6. 没了。（嗯
 
-#### Homebrew Event Loop, and Router
+### Homebrew Event Loop, and Router
 
-从文件头部导入的依赖可以了解到，这是一个基于 Flask 框架的 Web Server。
+从文件头部导入的依赖可以了解到，这是一个基于 Flask 框架的 Web Server。  
 那么我们从唯一一处设置了 Flask 路由 (`@app.route(...)`) 的函数 `entry_point()` 向下分析，看看这个 Server 究竟做了什么事情：
 
 ```python
@@ -241,8 +241,8 @@ def execute_event_loop():
 3. 捕获到自定义的回滚异常 (RollBackException) 时，把 Session 中的 `num_items` 和 `points` 数据回滚至刚收到请求时的状态。（有必要 ~~，但从写代码的角度说，这个操作放在这里稍显不合适~~
 4. 将 handler 执行的结果拼接，并响应回给客户端。
 
-所以！
-点题了！
+所以！  
+点题了！  
 出题人在这里实现了个简单的 [Event Loop](https://en.wikipedia.org/wiki/Event_loop) !
 
 回顾前面的代码，便能理解 `trigger_event(event)` 的意义： **为 Event Loop 提供推任务入队列的接口** —— 这也就意味着，这是一个 **异步** 操作。（注意了
@@ -258,6 +258,7 @@ ret_val = event_handler(args)
 —— 那么也就给了我们 **执行代码** 的机会。
 
 通过 review 解析出 `action` 和 `args` 的过程，可以了解到：
+
 1. 这两个变量来自于 Event Loop 队列中的每一个 `event`。
 2. `event` 中第一段介于 `':'` 和 `';'` 的值为 `action`。
 3. `action + ';'` 后方的全部值通过 `#` 分割为 `args` 数组。
@@ -268,8 +269,7 @@ ret_val = event_handler(args)
     abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789:;#
     ```
 
-这也就解释了 `entry_point()` 中 QueryString 限制的意图：限制由客户端直接触发的 handler 名必须含后缀 `'_handler'`。
-
+这也就解释了 `entry_point()` 中 QueryString 限制的意图：限制由客户端直接触发的 handler 名必须含后缀 `'_handler'`。  
 但这个限制真的有效吗？
 
 源代码中给出字符白名单虽然很干净，没有空格、引号和括号，但却出现了 `#` —— 恰好可以被利用于绕过后缀限制：
@@ -290,8 +290,8 @@ event_handler = eval(action + ('_handler' if is_action else '_function'))
 You naughty boy! ;)
 ```
 
-但还好这只是小试牛刀。
-我们还可以调用 handler 之外的其他方法；但受限于 Python 解释器的参数检查，在执行 `event_handler(args)` 时，这个方法还必须接受一个参数，参数值即 args 数组。
+但这不过是小试牛刀。  
+我们还可以调用 handler 之外的其他方法；因为受限于 Python 解释器的参数检查，在执行 `event_handler(args)` 时，这个方法还必须接受一个参数，参数值为 args 数组。
 
 嗯，是不是想起了 `trigger_event(event)` 中兼容数组类型参数的骚操作？来试一下：
 
@@ -320,17 +320,11 @@ ret_val = event_handler(args)
 
 OK. 这一条线索可以先放一边了。
 
-#### Cookie Session
+### Cookie Session
 在 `trigger_event(event)` 中另一个诡异的操作是往 session 里写日志。
 
-因为不了解 Python，所以先查了一下 [Flask 的文档](http://flask.pocoo.org/docs/1.0/quickstart/#sessions)，发现 Flask 内置的 session 模块是典型的 Cookie Session。
-
-Node.js 的 express 和 koa 框架也有类似的模块：
-- [koajs/session](https://github.com/koajs/session)
-- [expressjs/cookie-session](https://github.com/expressjs/cookie-session)
-
-（这两个模块都基于 [pillarjs/cookies](https://github.com/pillarjs/cookies) 实现）
-
+因为不了解 Python，所以先查了一下 [Flask 的文档](http://flask.pocoo.org/docs/1.0/quickstart/#sessions)，发现 Flask 内置的 session 模块是典型的 Cookie Session。  
+Node.js 的 [express](https://github.com/expressjs/cookie-session) 和 [koa](https://github.com/koajs/session) 框架也有类似的模块（都基于 [pillarjs/cookies](https://github.com/pillarjs/cookies) 实现）。  
 甚至前面另一道题 [web2](../2/readme.md) 中的 session 也是属于这种机制。
 
 正如 Flask 文档所述，这种存放在 cookie 中的 session 是客户端不可改但可读的：
@@ -377,11 +371,11 @@ console.log(readLogs({"log":[{" b":"YWN0aW9uOnZpZXc7aW5kZXg="},{" b":"YWN0aW9uOn
 
 便成功读到 `trigger_event(event)` 的操作日志。
 
-#### Async
+### Async
 TODO
 
 
-### 涉及资料
+## 涉及资料
 - 源代码
   - [完整通关脚本](./index.js)
 - 知识点
@@ -394,5 +388,5 @@ TODO
   - [koajs/session](https://github.com/koajs/session)
   - [expressjs/cookie-session](https://github.com/expressjs/cookie-session)
 
-### EOF
+## EOF
 [回到目录](../../readme.md)
