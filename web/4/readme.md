@@ -393,6 +393,9 @@ def consume_point_function(args):
 ```
 
 流程大致是：
+
+![](./_medias/graphviz-1.svg)
+
 ```graphviz
 digraph G {
     size = 4
@@ -437,6 +440,8 @@ digraph G {
 
 通过这个链接，我们在任务队列中把 `action:get_flag;` 塞在了支付前，完整的队列也就变成了：
 
+![](./_medias/graphviz-2.svg)
+
 ```graphviz
 digraph g {
     size = 6
@@ -479,6 +484,8 @@ digraph g {
 > 如果难以理解，不妨通过这份 [repeater.py](./repeater.py) 观察输入不同参数时所产生的日志内容；相比原题中的 [serve.py](./vendors/serve.py)，精简后的单例 request 更方便反复调试。
 
 执行流程则变成：
+
+![](./_medias/graphviz-3.svg)
 
 ```graphviz
 digraph G {
