@@ -161,7 +161,7 @@ if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0') 
 ```
 
-Review 整个源文件，可以得到很明确的目标： **捕获 `FLAG()` 函数的返回值** 。
+简单地 review 整个文件，可以得到很明确的目标： **捕获 `FLAG()` 函数的返回值** 。
 
 从唯一一处调用 `FLAG()` 函数的 `get_flag_handler(args)` 快速向上分析：
 1. 必须是在 `session['num_items'] >= 5` 时执行 `get_flag_handler(args)` 才能使 `FLAG()` 函数执行。
@@ -195,7 +195,7 @@ def entry_point():
 1. 接受 QueryString，并作为 `event` 参数调用 `trigger_event(event)`。
 2. Querystring 只允许以 `'action:'` 开头，长度不得超过 100 字符；否则都将被过滤并改为调用 `trigger_event('action:index;False#False')`。
 3. Session 为空时会自动重置为默认值。
-4. Session 在操作前会先把原值拷贝至当前请求实例中，应该是作为备份。
+4. Session 在操作前会先把原值拷贝至当前请求实例中。（应该是作为备份
 5. 此处调用 `trigger_event(event)` 后，会立即调用 `execute_event_loop()`。
 
 那么 `execute_event_loop()`  干了什么呢：
@@ -237,15 +237,15 @@ def execute_event_loop():
 ```
 
 1. 不断从请求实例的 `event_queue` 队列中取出最前的一个事件。
-2. 取出的事件会被解析成句柄方法类型 (action or function) 、动作名和参数值数组的组合；并以这三段数据调用指定的句柄方法 (handler)。（相当于自己造路由！
-3. 捕获到自定义的回滚异常 (RollBackException) 时，把 session 中的 `num_items` 和 `points` 数据回滚至刚收到请求时的状态。（有必要 ~~，但从设计的角度说，这个操作放在这里稍显不合适~~
+2. 取出的事件会被解析成三段数据：句柄方法类型 (action or function) 、动作名和参数数组；并用这三段数据调用指定的句柄方法 (handler)。（这步相当于自己造路由！
+3. 当捕获到自定义的回滚异常 (RollBackException) 时，把 session 中的 `num_items` 和 `points` 数据回滚至刚收到请求时的状态。（有必要 ~~，但从设计的角度说，这个操作放在这里稍显不合适~~
 4. 将 handler 执行的结果拼接，并响应回给客户端。
 
 所以！  
-点题了！  
-出题人在这里实现了个 ~~简易的~~ [Event Loop](https://en.wikipedia.org/wiki/Event_loop) !
+点题了！！  
+出题人在这里实现了个 ~~简易的~~ [Event Loop](https://en.wikipedia.org/wiki/Event_loop) ！！！
 
-回顾前面的代码，便能理解 `trigger_event(event)` 的意义： **为 Event Loop 提供推任务入队列的接口** —— 这也就意味着，这是一个 **异步** 操作。（注意了
+回顾前面的代码，便能理解 `trigger_event(event)` 的意义： **为 Event Loop 提供推任务入队列的接口** —— 同时也就意味着，这是一个 **异步** 操作。（注意了
 
 接着回到刚才的 `execute_event_loop()` 。在出题人自己造的路由 ~~（homebrew router~~ 里出现了一个 `eval`，用于实现 handler 调用：
 
@@ -257,19 +257,19 @@ ret_val = event_handler(args)
 
 —— 那么也就给了我们 **执行代码** 的机会。
 
-通过 review 解析出 `action` 和 `args` 的过程，可以了解到：
+通过 review `action` 和 `args` 的解析过程，可以了解到：
 
 1. 这两个变量来自于 Event Loop 队列中的每一个 `event`。
 2. `event` 中第一段介于 `':'` 和 `';'` 的值为 `action`。
 3. `action + ';'` 后方的全部值通过 `#` 分割为 `args` 数组。
-4. 根据 `action` 前方的值将解析出句柄方法类型，有且仅有两种值：`'action:'` 对应 `'_handler'`，`'func:'` 对应 `'_function'`；该值会在后续 `eval(...)` 时添加至参数尾部；这样做的目的是限制该 `eval` 访问的方法只允许是用这两种后缀命名的 handler（算是一种不太严谨的沙箱保护）。
+4. 通过解析 `action` 前方的全部值可以确定句柄方法类型，句柄方法类型有且仅有两种值：`'action:'` 对应 `'_handler'`，`'func:'` 对应 `'_function'`；该值会在后续 `eval(...)` 时被添加至参数尾部；这样做的目的是限制该 `eval` 只能访问 handler，算是一种通过约定方法名后缀实现的沙箱保护。
 5. `event` 的值在被解析前会先经历一次白名单检查；如果出现了不在白名单内的字符，将直接结束 Event Loop（丢弃本次以及后续所有未执行的任务）；白名单内的字符为：
 
     ```
     abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789:;#
     ```
 
-这也就解释了 `entry_point()` 中 QueryString 限制的意图：限制由客户端直接触发的 handler 必须含后缀名 `'_handler'`。 
+这也就解释了 `entry_point()` 中检查 QueryString 的意图：限制由客户端直接触发的 handler 类型只能是 `'_handler'` (而不是 `'_function'`) 。 
 
 但这个限制真的有效吗？
 
@@ -294,7 +294,7 @@ You naughty boy! ;)
 但这不过是小试牛刀。  
 我们还可以调用 handler 之外的其他方法；因为受限于 Python 解释器的参数检查，在执行 `event_handler(args)` 时，这个方法还必须接受一个参数，参数值为 args 数组。
 
-—— 嗯，是不是想起了 `trigger_event(event)` 中兼容数组类型参数的骚操作？  
+—— 嗯？是不是想起了 `trigger_event(event)` 中兼容数组类型参数的骚操作？  
 来试一下：
 
 ```javascript
@@ -374,9 +374,9 @@ console.log(readLogs({"log":[{" b":"YWN0aW9uOnZpZXc7aW5kZXg="},{" b":"YWN0aW9uOn
 便成功读到 `trigger_event(event)` 的操作日志。
 
 ### Async
-现在我们已经能够随意执行 `trigger_event(event)`，并且通过 Cookie-Ssession 读取执行 `trigger_event(event)` 的日志了。结合开头对 `get_flag_handler(args)` 的分析，接下来的目标则是让 `session['num_items'] > 5`，使得 `trigger_event('func:show_flag;' + FLAG())` 被执行。
+现在我们已经能够随意执行 `trigger_event(event)`，并且读取 Cookie-Session 中 `trigger_event(event)` 的执行日志了。结合开头对 `get_flag_handler(args)` 的分析，接下来的目标则是让 `session['num_items'] > 5`，使得 `trigger_event('func:show_flag;' + FLAG())` 被执行。
 
-检查能够使 `session['num_items']` 增加的方法（也就是购买操作）：
+检查能够使 `session['num_items']` 值增加的方法（也就是购买操作）：
 
 ```python
 def buy_handler(args): 
@@ -393,29 +393,147 @@ def consume_point_function(args):
 ```
 
 那么逻辑大致是：
-```plantuml
-@startuml
-|正常|
-start
-partition 发货 {
-  :添加钻石个数;
+```graphviz
+digraph G {
+    node [shape=record]
+
+	subgraph cluster_0 {
+		style=filled;
+		color=grey90;
+		node [style=filled,color=white];
+		label = "发货";
+        添加钻石个数;
+	}
+
+	subgraph cluster_1 {
+	    style=filled;
+	    color=grey90;
+		node [style=filled, color=white];
+		label = "支付";
+		检查剩余点数;
+		扣除点数;
+	}
+
+	subgraph cluster_2 {
+	    style=filled;
+	    color=grey90;
+		node [style=filled, color=white];
+		label = "回滚";
+		回滚钻石个数;
+	}
+	
+	开始 -> 添加钻石个数;
+	添加钻石个数 -> 检查剩余点数;
+	检查剩余点数 -> 扣除点数 [label = 足够];
+	扣除点数 -> 交易成功;
+	检查剩余点数 -> 回滚钻石个数 [label = 不足];
+	回滚钻石个数 -> 交易失败;
 }
-partition 扣款 {
-  if (检查剩余点数) then (足够)
-    |正常|
-    :扣除点数;
-  else (不足)
-    |异常|
-    :回滚数据;
-    stop
-  endif
-}
-|正常|
-stop
-@enduml
 ```
 
+```graphviz
+digraph g {
+    subgraph cluster_0 {
+        label="Entry"
+        node [shape="record"];
+        queue_0_1 [label="<buy> [0] buy(999) | <flag> [1] get_flag()"];
+    }
+    
+    subgraph cluster_1 {
+        label="Inside"
+        color=transparent;
+        bgcolor=grey99;
+        
+        subgraph cluster_1_0 {
+            label=""
+            color=black;
+            trigger_1 [label="push(['consume;999', 'view;index'])"];
+            queue_2_3 [label="[2] consume(999) | [3] view('index')", shape=record];
+        }
 
+        subgraph cluster_1_1 {
+            label=""
+            color=black;
+            trigger_2 [label="push('show_flag(FLAG)')"];
+            queue_4 [label="[4] show_flag(FLAG)", shape=record, color=red];
+            trigger_3 [label="push('view(\"index\")')"];
+            queue_5 [label="[5] view('index')", shape=record];
+        }
+        
+        subgraph cluster_1_2 {
+            label=""
+            color=black;
+        }
+        
+        subgraph cluster_1_4 {
+            label=""
+            color=black;
+        }
+    }
+    
+    queue_0_1:buy -> trigger_1 -> queue_0_1:flag;
+    trigger_1 -> queue_2_3 [style=dashed];
+    queue_0_1:flag -> trigger_2;
+    trigger_2 -> queue_4 [style=dashed];
+
+    trigger_2 -> trigger_3;
+    trigger_3 -> queue_5 [style=dashed];
+}
+```
+
+```graphviz
+digraph G {
+    node [shape=record]
+
+	subgraph cluster_0 {
+		style=filled;
+		color=grey90;
+		node [style=filled,color=white];
+		label = "发货";
+        添加钻石个数;
+	}
+
+	subgraph cluster_1 {
+	    style=filled;
+	    color=grey90;
+		node [style=filled, color=white];
+		label = "支付";
+		检查剩余点数;
+		扣除点数;
+	}
+
+	subgraph cluster_2 {
+	    style=filled;
+	    color=grey90;
+		node [style=filled, color=white];
+		label = "回滚";
+		回滚钻石个数;
+	}
+
+	subgraph cluster_3 {
+		style=filled;
+		color=grey90;
+		node [style=filled,color=white];
+		label = "获取 FLAG";
+        检查钻石个数;
+        读取_FLAG_并推入任务队列;
+        写入_FLAG_至日志;
+        跳过;
+	}
+	
+	开始 -> 添加钻石个数;
+	添加钻石个数 -> 检查钻石个数;
+	检查钻石个数 -> 读取_FLAG_并推入任务队列 [label=足够];
+	读取_FLAG_并推入任务队列 -> 写入_FLAG_至日志;
+	检查钻石个数 -> 跳过 [label=不足];
+	写入_FLAG_至日志 -> 检查剩余点数;
+	跳过 -> 检查剩余点数;
+	检查剩余点数 -> 扣除点数 [label = 足够];
+	扣除点数 -> 交易成功;
+	检查剩余点数 -> 回滚钻石个数 [label = 不足];
+	回滚钻石个数 -> 交易失败;
+}
+```
 
 
 ## 涉及资料
