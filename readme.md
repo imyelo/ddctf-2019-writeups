@@ -2,7 +2,7 @@
 > Node.js 选手的 DDCTF 2019 Writeups
 
 ## Writeups
-[DDCTF 2019 Writeups](https://yelo.cc/2019/04/13/ddctf-2019-writeups-web-intro.html)
+[DDCTF 2019 Writeups](https://yelo.cc/2019/04/13/ddctf-2019-writeups-intro.html)
 
 ### 如何运行 writeups 内的脚本？
 #### Node.js 脚本
