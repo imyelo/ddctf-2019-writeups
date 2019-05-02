@@ -22,13 +22,13 @@ class Api {
               console.error(response)
               throw error
             }
-              if (body.code !== 200) {
-                let error = new Error(body.msg)
-                error.response = response
-                throw error
-              }
+            if (body.code !== 200) {
+              let error = new Error(body.msg)
+              error.response = response
+              throw error
+            }
             return response
-          }
+          },
         ],
       },
     })
@@ -55,7 +55,7 @@ class Api {
   /**
    * https://zhuanlan.kanxue.com/article-469.htm
    */
-  async createOrder (price = '4294967296') {
+  async createBill (price = '4294967296') {
     let query = querystring.stringify({
       ticket_price: price,
     })
@@ -64,7 +64,7 @@ class Api {
     return billId
   }
 
-  async pay (billId) {
+  async payBill (billId) {
     let query = querystring.stringify({
       bill_id: billId,
     })

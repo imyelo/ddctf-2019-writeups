@@ -50,12 +50,10 @@ async function spawnGifts () {
         return gifts
       }
     } catch (e) {}
-    let billId = await api.createOrder(4294967296)
-    await api.pay(billId)
+    let billId = await api.createBill(4294967296)
+    await api.payBill(billId)
     return await api.getGifts()
   }
-
-  // let gifts = flatten([await create('yelo_spawn_001')])
 
   const gauge = new Gauge()
   let counter = {
@@ -116,21 +114,15 @@ async function kick () {
   console.log('Kick: Done.')
 }
 
-async function main () {
-  try {
-    /**
-     * create gifts
-     * only once
-     */
-    await spawnGifts()
+;(async () => {
+  /**
+   * create gifts
+   * only once
+   */
+  await spawnGifts()
 
-    /**
-     * do remove robots
-     */
-    await kick()
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-main()
+  /**
+   * do remove robots
+   */
+  await kick()
+})()
