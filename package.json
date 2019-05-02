@@ -10,6 +10,9 @@
     "node": ">=8"
   },
   "dependencies": {
+    "@pollyjs/adapter-node-http": "^2.4.0",
+    "@pollyjs/core": "^2.4.0",
+    "@pollyjs/persister-fs": "^2.1.0",
     "cheerio": "^1.0.0-rc.3",
     "debug": "^4.1.1",
     "del": "^4.1.0",
@@ -29,6 +32,7 @@
     "object-path": "^0.11.4",
     "p-all": "^2.1.0",
     "p-queue": "^5.0.0",
+    "p-retry": "^4.1.0",
     "tough-cookie": "^3.0.1"
   }
 }

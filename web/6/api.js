@@ -11,7 +11,6 @@ class Api {
     this.got = got.extend({
       baseUrl: endpoint,
       cookieJar: this.jar,
-      retry: 5,
       hooks: {
         afterResponse: [
           (response) => {
@@ -52,10 +51,7 @@ class Api {
     return name
   }
 
-  /**
-   * https://zhuanlan.kanxue.com/article-469.htm
-   */
-  async createBill (price = '4294967296') {
+  async createBill ({ price }) {
     let query = querystring.stringify({
       ticket_price: price,
     })
@@ -64,9 +60,9 @@ class Api {
     return billId
   }
 
-  async payBill (billId) {
+  async payBill (id) {
     let query = querystring.stringify({
-      bill_id: billId,
+      bill_id: id,
     })
     let { body } = await this.got(`/pay_ticket?${query}`)
     let ticket = op.get(body, 'data.0')
