@@ -3,7 +3,8 @@ const pad = require('left-pad')
 
 const PORT = process.env.PORT || 3306
 
-const FILENAME = '/etc/passwd'
+const FILENAME = process.argv[2] || '/etc/passwd'
+
 // const FILENAME = '/home/dc2-user/.bash_history' // useless
 // const FILENAME = '/root/.bash_history'
 // const FILENAME = '/home/dc2-user/ctf_web_2/app/main/views.py'

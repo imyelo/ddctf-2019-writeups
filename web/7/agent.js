@@ -11,5 +11,5 @@ const SAMPLE = JSON.stringify([
 const server = micro(() => SAMPLE)
 
 server.listen(PORT, () => {
-  console.log('Simplified-Agent for ddctf-web-7 started on', server.address())
+  console.log('Simplified-Agent for DDCTF-2019-Web-7 started on', server.address())
 })
