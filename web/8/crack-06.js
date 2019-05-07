@@ -1,21 +1,3 @@
-const got = require('got')
-
-const ORIGINAL_TOKEN = 'UGFkT3JhY2xlOml2L2NiY8O+7uQmXKFqNVUuI9c7VBe42FqRvernmQhsxyPnvxaF'
-const ORIGINAL_IV = Buffer.from(ORIGINAL_TOKEN, 'base64').slice(0, 16)
-const ORIGINAL_CIPHER = Buffer.from(ORIGINAL_TOKEN, 'base64').slice(16)
-
-const DECRYPT_ERROR = 'decrypt err~'
-
-async function challenge (iv, cipher) {
-  let response = await got('http://116.85.48.104:5023/api/account_info', {
-    headers: {
-      host: 'c1n0h7ku1yw24husxkxxgn3pcbqu56zj.ddctf2019.com',
-      cookie: `token=${Buffer.concat([iv, cipher]).toString('base64')}`,
-    },
-  })
-  return response.body.trim() !== DECRYPT_ERROR
-}
-
 const log = require('log-update')
 const pad = require('left-pad')
 const ALL_HEX = Array.from(Array(256)).map((v, i) => pad(i.toString(16), 2, 0))
@@ -43,7 +25,7 @@ function xor (x, y) {
   return z
 }
 
-async function crack (iv, cipher) {
+async function crack (iv, cipher, challenge) {
   let original = Buffer.concat([iv, cipher])
   let size = iv.length
   let intermediary = Buffer.alloc(cipher.length)
@@ -101,6 +83,32 @@ async function crack (iv, cipher) {
   }
 }
 
+
+const got = require('got')
+
+const ORIGINAL_TOKEN = 'UGFkT3JhY2xlOml2L2NiY8O+7uQmXKFqNVUuI9c7VBe42FqRvernmQhsxyPnvxaF'
+const ORIGINAL_IV = Buffer.from(ORIGINAL_TOKEN, 'base64').slice(0, 16)
+const ORIGINAL_CIPHER = Buffer.from(ORIGINAL_TOKEN, 'base64').slice(16)
+
+const DECRYPT_ERROR = 'decrypt err~'
+
+async function challenge (iv, cipher) {
+  let response = await got('http://116.85.48.104:5023/api/account_info', {
+    headers: {
+      host: 'c1n0h7ku1yw24husxkxxgn3pcbqu56zj.ddctf2019.com',
+      cookie: `token=${Buffer.concat([iv, cipher]).toString('base64')}`,
+    },
+  })
+  return response.body.trim() !== DECRYPT_ERROR
+}
+
+
+if (module.parent) {
+  exports.crack = crack
+  exports.challenge = challenge
+  return
+}
+
 ;(async () => {
-  await crack(ORIGINAL_IV, ORIGINAL_CIPHER)
+  await crack(ORIGINAL_IV, ORIGINAL_CIPHER, challenge)
 })()
