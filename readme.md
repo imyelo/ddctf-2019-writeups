@@ -42,4 +42,4 @@
 ~~这里没有这种东西~~
 
 ## License
-[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh) &copy; [Yelo](https://yelo.cc/2019/04/13/ddctf-2019-writeups-intro.html) 2019 - present
+[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh) and Apache-2.0 &copy; [Yelo](https://yelo.cc/2019/04/13/ddctf-2019-writeups-intro.html) 2019 - present
